@@ -4,8 +4,10 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.ignite.Ignite;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
 import poc.ignite.domain.Person;
+import poc.ignite.domain.PersonKey;
 
 @Service
 @Slf4j
@@ -26,14 +29,17 @@ public class IgniteService {
 
 	@Autowired
 	private Ignite ignite;
-	private IgniteCache<Long, Person> personCache;
+	private IgniteCache<PersonKey, Person> personCache;
 
 	private void start() {
 		log.debug("start service");
 
-		personCache.put(1L, new Person(1L, "Test user"));
+		personCache.put(new PersonKey(1L, "Test user"), new Person(1L, "Test user"));
 
-		personCache.forEach(r -> log.info("r: " + r.toString()));
+//		Map<PersonKey, Person> map = new HashMap<>();
+//		personCache.putAll(map);
+
+		personCache.forEach(r -> log.info("key: " + r.getKey() + "value: " + r.getValue()));
 	}
 
 	private void initCache() {
@@ -45,7 +51,7 @@ public class IgniteService {
 
 		QueryEntity queryEntity = new QueryEntity();
 
-		queryEntity.setKeyType(Long.class.getName());
+		queryEntity.setKeyType(PersonKey.class.getName());
 		queryEntity.setValueType(Person.class.getName());
 
 		LinkedHashMap<String, String> fields = new LinkedHashMap<String, String>();
@@ -57,12 +63,19 @@ public class IgniteService {
 //		fields.put("resume", String.class.getName());
 		// fields.put("salary", Double.class.getName());
 
-		List<Field> fieldsLs = Arrays.stream(Person.class.getDeclaredFields())
-				.filter(f -> !f.getName().toLowerCase().equals("serialversionuid")).collect(Collectors.toList());
+		LinkedHashMap<String, String> map = Arrays.stream(Person.class.getDeclaredFields())
+				.filter(f -> !f.getName().toLowerCase().equals("serialversionuid")).collect(Collectors
+						.toMap(f -> f.getName(), f -> f.getType().getName(), (k, v) -> v, LinkedHashMap::new));
 
-		fieldsLs.forEach(f -> fields.put(f.getName(), f.getType().getName()));
+//		List<Field> fieldsLs = Arrays.stream(Person.class.getDeclaredFields())
+//				.filter(f -> !f.getName().toLowerCase().equals("serialversionuid")).collect(Collectors.toList());
+//		fieldsLs.forEach(f -> fields.put(f.getName(), f.getType().getName()));
+//		log.info("fields: " + fields);
+//		queryEntity.setFields(fields);
 
-		queryEntity.setFields(fields);
+		log.info("map: " + map);
+
+		queryEntity.setFields(map);
 
 		Collection<QueryIndex> indexes = new ArrayList<>(3);
 
