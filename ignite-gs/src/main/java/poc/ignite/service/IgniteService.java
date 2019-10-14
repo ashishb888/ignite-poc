@@ -31,6 +31,9 @@ public class IgniteService {
 	private Ignite ignite;
 	private IgniteCache<PersonKey, Person> personCache;
 
+	@Autowired
+	private DataStreamerService dss;
+
 	private void start() {
 		log.debug("start service");
 
@@ -102,7 +105,8 @@ public class IgniteService {
 		log.debug("main service");
 		log.debug("name: " + ignite.name());
 
-		init();
-		start();
+//		init();
+//		start();
+		dss.main();
 	}
 }
