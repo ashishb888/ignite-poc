@@ -275,3 +275,28 @@ $JAVA_HOME/bin/java -jar ignite-gs-0.0.1-SNAPSHOT.jar
 +--------------------------------+
 1 row selected (0.016 seconds)
 0: jdbc:ignite:thin://hdpdev6:10802>
+
+----------=----------
+
+RUN 3
+
+Removing flush and closing streamer does not do the job 
+
+
+$JAVA_HOME/bin/java -jar ignite-gs-0.0.1-SNAPSHOT.jar
+
+0: jdbc:ignite:thin://hdpdev6:10802> select count(*) from "TEST".INTEGER where _val =_key + 2;
++--------------------------------+
+|            COUNT(*)            |
++--------------------------------+
+| 3734                           |
++--------------------------------+
+1 row selected (0.024 seconds)
+0: jdbc:ignite:thin://hdpdev6:10802> select count(*) from "TEST".INTEGER where _val !=_key + 2;
++--------------------------------+
+|            COUNT(*)            |
++--------------------------------+
+| 6266                           |
++--------------------------------+
+1 row selected (0.026 seconds)
+0: jdbc:ignite:thin://hdpdev6:10802>

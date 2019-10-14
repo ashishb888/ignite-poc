@@ -37,29 +37,29 @@ public class DataStreamerService {
 				});
 
 				streamer.addData(entries);
-				streamer.flush();
+				// streamer.flush();
 
 				IntStream.range(0, 10000).forEach(i -> {
 					entries.put(i, i + 1);
 				});
 
 				streamer.addData(entries);
-				streamer.flush();
+				// streamer.flush();
 
 				IntStream.range(0, 10000).forEach(i -> {
 					entries.put(i, i + 2);
 				});
 
 				streamer.addData(entries);
-				streamer.flush();
+				// streamer.flush();
 			}
+		}
 
-			while (true) {
-				try {
-					Thread.sleep(20000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+		while (true) {
+			try {
+				Thread.sleep(20000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 		}
 	}
