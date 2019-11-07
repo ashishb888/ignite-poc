@@ -83,7 +83,8 @@ public class IgniteService {
 		Collection<QueryIndex> indexes = new ArrayList<>(3);
 
 		indexes.add(new QueryIndex("id"));
-		indexes.add(new QueryIndex("orgId"));
+		// Set custom name for index
+		indexes.add(new QueryIndex("orgId").setName("org_id_custom_name"));
 		indexes.add(new QueryIndex("salary"));
 
 		queryEntity.setIndexes(indexes);
@@ -105,8 +106,8 @@ public class IgniteService {
 		log.debug("main service");
 		log.debug("name: " + ignite.name());
 
-//		init();
-//		start();
-		dss.main();
+		init();
+		start();
+		// dss.main();
 	}
 }
