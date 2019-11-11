@@ -7,6 +7,7 @@ import org.apache.ignite.IgniteException;
 import org.apache.ignite.Ignition;
 import org.apache.ignite.configuration.DataStorageConfiguration;
 import org.apache.ignite.configuration.IgniteConfiguration;
+import org.apache.ignite.logger.slf4j.Slf4jLogger;
 import org.apache.ignite.spi.communication.tcp.TcpCommunicationSpi;
 import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi;
 import org.apache.ignite.spi.discovery.tcp.ipfinder.vm.TcpDiscoveryVmIpFinder;
@@ -65,7 +66,9 @@ public class BeansConfig {
 			igniteConfiguration.setPublicThreadPoolSize(16);
 			igniteConfiguration.setSystemThreadPoolSize(16);
 			igniteConfiguration.setPeerClassLoadingEnabled(false);
-			//igniteConfiguration.setIgniteInstanceName("test";)
+			// igniteConfiguration.setIgniteInstanceName("test";)
+
+			igniteConfiguration.setGridLogger(new Slf4jLogger());
 
 			ignite = Ignition.getOrStart(igniteConfiguration);
 
