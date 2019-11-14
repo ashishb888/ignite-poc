@@ -12,7 +12,7 @@ ignite:
   other:
     blankNode: false
   cache:
-    backups: 0
+    backups: 1
 
 kafka:
   kafkaConsumer:

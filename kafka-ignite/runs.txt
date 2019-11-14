@@ -73,3 +73,132 @@ sqlline version 1.3.0
 0: jdbc:ignite:thin://host:10800>
 
 ----------==----------
+RUN 2: Cache backup 1
+
+No data loss on killing any of node
+
+First instance
+	ignite:
+	  other:
+	    blankNode: true
+
+[user@host kafka-ignite1]$ $JAVA_HOME/bin/java -jar kafka-ignite-0.0.1-SNAPSHOT.jar
+
+[user@host ~]$ netstat -lnp | grep 133576
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+tcp        0      0 0.0.0.0:11211           0.0.0.0:*               LISTEN      133576/java
+tcp        0      0 0.0.0.0:10800           0.0.0.0:*               LISTEN      133576/java
+tcp        0      0 0.0.0.0:42100           0.0.0.0:*               LISTEN      133576/java
+tcp        0      0 0.0.0.0:42500           0.0.0.0:*               LISTEN      133576/java
+[user@host ~]$
+
+[user@host ~]$ $IGNITE_HOME/bin/sqlline.sh --verbose=true -u jdbc:ignite:thin://host:10800
+issuing: !connect jdbc:ignite:thin://host:10800 '' '' org.apache.ignite.IgniteJdbcThinDriver
+Connecting to jdbc:ignite:thin://host:10800
+Connected to: Apache Ignite (version 2.6.0#20180710-sha1:669feacc)
+Driver: Apache Ignite Thin JDBC Driver (version 2.6.0#20180710-sha1:669feacc)
+Autocommit status: true
+Transaction isolation: TRANSACTION_REPEATABLE_READ
+sqlline version 1.3.0
+0: jdbc:ignite:thin://host:10800> select count(*) from "STS".STOCKTRADE;
++--------------------------------+
+|            COUNT(*)            |
++--------------------------------+
+| 5733                           |
++--------------------------------+
+1 row selected (0.114 seconds)
+0: jdbc:ignite:thin://host:10800>
+
+AFTER KILLING FIRST INSTANCE
+
+[user@host ~]$ $IGNITE_HOME/bin/sqlline.sh --verbose=true -u jdbc:ignite:thin://host:10800
+issuing: !connect jdbc:ignite:thin://host:10800 '' '' org.apache.ignite.IgniteJdbcThinDriver
+Connecting to jdbc:ignite:thin://host:10800
+Error: Failed to connect to server [host=host, port=10800] (state=08001,code=0)
+java.sql.SQLException: Failed to connect to server [host=host, port=10800]
+        at org.apache.ignite.internal.jdbc.thin.JdbcThinTcpIo.connect(JdbcThinTcpIo.java:253)
+        at org.apache.ignite.internal.jdbc.thin.JdbcThinTcpIo.start(JdbcThinTcpIo.java:180)
+        at org.apache.ignite.internal.jdbc.thin.JdbcThinTcpIo.start(JdbcThinTcpIo.java:144)
+        at org.apache.ignite.internal.jdbc.thin.JdbcThinConnection.ensureConnected(JdbcThinConnection.java:148)
+        at org.apache.ignite.internal.jdbc.thin.JdbcThinConnection.<init>(JdbcThinConnection.java:137)
+        at org.apache.ignite.IgniteJdbcThinDriver.connect(IgniteJdbcThinDriver.java:157)
+        at sqlline.DatabaseConnection.connect(DatabaseConnection.java:156)
+        at sqlline.DatabaseConnection.getConnection(DatabaseConnection.java:204)
+        at sqlline.Commands.connect(Commands.java:1095)
+        at sqlline.Commands.connect(Commands.java:1001)
+        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+        at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+        at java.lang.reflect.Method.invoke(Method.java:498)
+        at sqlline.ReflectiveCommandHandler.execute(ReflectiveCommandHandler.java:38)
+        at sqlline.SqlLine.dispatch(SqlLine.java:791)
+        at sqlline.SqlLine.initArgs(SqlLine.java:566)
+        at sqlline.SqlLine.begin(SqlLine.java:643)
+        at sqlline.SqlLine.start(SqlLine.java:373)
+        at sqlline.SqlLine.main(SqlLine.java:265)
+Caused by: java.net.ConnectException: Connection refused (Connection refused)
+        at java.net.PlainSocketImpl.socketConnect(Native Method)
+        at java.net.AbstractPlainSocketImpl.doConnect(AbstractPlainSocketImpl.java:350)
+        at java.net.AbstractPlainSocketImpl.connectToAddress(AbstractPlainSocketImpl.java:206)
+        at java.net.AbstractPlainSocketImpl.connect(AbstractPlainSocketImpl.java:188)
+        at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:392)
+        at java.net.Socket.connect(Socket.java:589)
+        at org.apache.ignite.internal.jdbc.thin.JdbcThinTcpIo.connect(JdbcThinTcpIo.java:249)
+        ... 19 more
+sqlline version 1.3.0
+0: jdbc:ignite:thin://host:10800>
+
+
+----------
+
+Second instance
+	ignite:
+	  other:
+	    blankNode: false
+
+[user@host kafka-ignite2]$ $JAVA_HOME/bin/java -jar kafka-ignite-0.0.1-SNAPSHOT.jar
+
+[user@host ~]$ netstat -lnp | grep 133787
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+tcp        0      0 0.0.0.0:11212           0.0.0.0:*               LISTEN      133787/java
+tcp        0      0 0.0.0.0:10801           0.0.0.0:*               LISTEN      133787/java
+tcp        0      0 0.0.0.0:42101           0.0.0.0:*               LISTEN      133787/java
+tcp        0      0 0.0.0.0:42501           0.0.0.0:*               LISTEN      133787/java
+
+[user@host ~]$ $IGNITE_HOME/bin/sqlline.sh --verbose=true -u jdbc:ignite:thin://host:10801
+issuing: !connect jdbc:ignite:thin://host:10801 '' '' org.apache.ignite.IgniteJdbcThinDriver
+Connecting to jdbc:ignite:thin://host:10801
+Connected to: Apache Ignite (version 2.6.0#20180710-sha1:669feacc)
+Driver: Apache Ignite Thin JDBC Driver (version 2.6.0#20180710-sha1:669feacc)
+Autocommit status: true
+Transaction isolation: TRANSACTION_REPEATABLE_READ
+sqlline version 1.3.0
+0: jdbc:ignite:thin://host:10801> select count(*) from "STS".STOCKTRADE;
++--------------------------------+
+|            COUNT(*)            |
++--------------------------------+
+| 5733                           |
++--------------------------------+
+1 row selected (0.222 seconds)
+0: jdbc:ignite:thin://host:10801>
+
+AFTER KILLING FIRST INSTANCE
+
+[user@host ~]$ $IGNITE_HOME/bin/sqlline.sh --verbose=true -u jdbc:ignite:thin://host:10801
+issuing: !connect jdbc:ignite:thin://host:10801 '' '' org.apache.ignite.IgniteJdbcThinDriver
+Connecting to jdbc:ignite:thin://host:10801
+Connected to: Apache Ignite (version 2.6.0#20180710-sha1:669feacc)
+Driver: Apache Ignite Thin JDBC Driver (version 2.6.0#20180710-sha1:669feacc)
+Autocommit status: true
+Transaction isolation: TRANSACTION_REPEATABLE_READ
+sqlline version 1.3.0
+0: jdbc:ignite:thin://host:10801> select count(*) from "STS".STOCKTRADE;
++--------------------------------+
+|            COUNT(*)            |
++--------------------------------+
+| 5733                           |
++--------------------------------+
+1 row selected (0.029 seconds)
+0: jdbc:ignite:thin://host:10801>
