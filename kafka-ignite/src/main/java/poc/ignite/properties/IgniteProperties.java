@@ -14,4 +14,5 @@ import lombok.Setter;
 @Getter
 public class IgniteProperties {
 	private Map<String, String> cache;
+	private Map<String, String> other;
 }

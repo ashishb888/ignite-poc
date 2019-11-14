@@ -9,6 +9,8 @@ logging:
     poc.ignite: debug
 
 ignite:
+  other:
+    blankNode: false
   cache:
     backups: 0
 
