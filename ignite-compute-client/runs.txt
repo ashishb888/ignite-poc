@@ -1,5 +1,21 @@
 RUN 1
 
+$JAVA_HOME/bin/java -jar ignite-compute-server-0.0.1-SNAPSHOT.jar
+
+2019-11-19 19:27:14.361  INFO 24783 --- [eout-worker-#71] org.apache.ignite.internal.IgniteKernal  : FreeList [name=null, buckets=256, dataPages=408, reusePages=0]
+2019-11-19 19:27:14.568 DEBUG 24783 --- [       pub-#137] poc.ignite.service.ComputeService$IR     : k: 07-JAN-2019, cacheName: stock-trade-cache
+2019-11-19 19:27:14.572 DEBUG 24783 --- [       pub-#137] poc.ignite.service.ComputeService$IR     : entries: 10
+2019-11-19 19:27:14.575 DEBUG 24783 --- [       pub-#138] poc.ignite.service.ComputeService$IR     : k: 08-JAN-2019, cacheName: stock-trade-cache
+2019-11-19 19:27:14.578 DEBUG 24783 --- [       pub-#138] poc.ignite.service.ComputeService$IR     : entries: 10
+2019-11-19 19:27:14.580 DEBUG 24783 --- [       pub-#139] poc.ignite.service.ComputeService$IR     : k: 09-JAN-2019, cacheName: stock-trade-cache
+2019-11-19 19:27:14.583 DEBUG 24783 --- [       pub-#139] poc.ignite.service.ComputeService$IR     : entries: 10
+2019-11-19 19:27:15.586 DEBUG 24783 --- [       pub-#143] poc.ignite.service.ComputeService$IR     : k: 07-JAN-2019, cacheName: stock-trade-cache
+2019-11-19 19:27:15.590 DEBUG 24783 --- [       pub-#143] poc.ignite.service.ComputeService$IR     : entries: 10
+2019-11-19 19:27:15.592 DEBUG 24783 --- [       pub-#144] poc.ignite.service.ComputeService$IR     : k: 08-JAN-2019, cacheName: stock-trade-cache
+2019-11-19 19:27:15.595 DEBUG 24783 --- [       pub-#144] poc.ignite.service.ComputeService$IR     : entries: 10
+2019-11-19 19:27:15.597 DEBUG 24783 --- [       pub-#145] poc.ignite.service.ComputeService$IR     : k: 09-JAN-2019, cacheName: stock-trade-cache
+2019-11-19 19:27:15.600 DEBUG 24783 --- [       pub-#145] poc.ignite.service.ComputeService$IR     : entries: 10
+
 [hdpusr@hdpdev6 ignite-events]$ netstat -lnp | grep 20923
 (Not all processes could be identified, non-owned process info
  will not be shown, you would have to be root to see it all.)
@@ -83,5 +99,18 @@ tcp        0      0 0.0.0.0:42500           0.0.0.0:*               LISTEN      
 1 row selected (0.019 seconds)
 0: jdbc:ignite:thin://hdpdev6:10800>
 
+
+
+$JAVA_HOME/bin/java -jar ignite-compute-client-0.0.1-SNAPSHOT.jar
+
+2019-11-19 19:26:56.948  INFO 25200 --- [           main] poc.ignite.IgniteApp                     : Started IgniteApp in 3.328 seconds (JVM running for 3.756)
+2019-11-19 19:26:56.949  INFO 25200 --- [           main] poc.ignite.IgniteApp                     : run service
+2019-11-19 19:26:56.950 DEBUG 25200 --- [           main] poc.ignite.service.IgniteService         : main service
+2019-11-19 19:26:56.950 DEBUG 25200 --- [           main] poc.ignite.service.ComputeService        : main service
+2019-11-19 19:26:56.950 DEBUG 25200 --- [           main] poc.ignite.service.ComputeService        : start service
+2019-11-19 19:26:56.950 DEBUG 25200 --- [           main] poc.ignite.service.ComputeService        : compute service
+2019-11-19 19:26:56.950 DEBUG 25200 --- [           main] poc.ignite.service.ComputeService        : affinityRun service
+2019-11-19 19:26:57.057  INFO 25200 --- [   affinity-run] o.a.i.i.m.d.GridDeploymentLocalStore     : Class locally deployed: class org.apache.ignite.cache.affinity.rendezvous.RendezvousAffinityFunction
+2019-11-19 19:26:57.060  INFO 25200 --- [   affinity-run] o.a.i.i.m.d.GridDeploymentLocalStore     : Class locally deployed: class poc.ignite.service.ComputeService$IR
 
 ----------==----------
