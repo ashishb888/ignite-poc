@@ -1,3 +1,52 @@
-RUN 1
+RUN 1 EventsService
+
+NODE 1
+
+$JAVA_HOME/bin/java -jar ignite-events-0.0.1-SNAPSHOT.jar
+
+2019-11-19 15:08:03.513  INFO 151505 --- [ent-worker-#101] o.a.i.i.m.d.GridDiscoveryManager         : Topology snapshot [ver=3, servers=3, clients=0, CPUs=32, offheap=3.0GB, heap=80.0GB]
+
+----------
+
+NODE 2
+
+$JAVA_HOME/bin/java -jar ignite-events-0.0.1-SNAPSHOT.jar
+
+2019-11-19 15:08:03.513  INFO 151747 --- [ent-worker-#101] o.a.i.i.m.d.GridDiscoveryManager         : Topology snapshot [ver=3, servers=3, clients=0, CPUs=32, offheap=3.0GB, heap=80.0GB]
+
+After killing NODE 1
+
+2019-11-19 15:09:25.553  INFO 151747 --- [ent-worker-#101] o.a.i.i.m.d.GridDiscoveryManager         : Topology snapshot [ver=4, servers=2, clients=0, CPUs=32, offheap=2.0GB, heap=53.0GB]
+2019-11-19 15:09:25.586 ERROR 151747 --- [ent-worker-#101] poc.ignite.service.EventsService         : name: NODE_LEFT
+2019-11-19 15:09:25.586  INFO 151747 --- [       sys-#129] .c.d.d.p.GridDhtPartitionsExchangeFuture : finishExchangeOnCoordinator [topVer=AffinityTopologyVersion [topVer=4, minorTopVer=0], resVer=AffinityTopologyVersion [topVer=4, minorTopVer=0]]
+2019-11-19 15:09:25.587 ERROR 151747 --- [ent-worker-#101] poc.ignite.service.EventsService         : message: Node left: TcpDiscoveryNode [id=005c993d-c512-4fad-a78a-6f90eb56ad77, addrs=[127.0.0.1, 172.17.241.80, 172.17.5.36], sockAddrs=[hdpdev6/172.17.5.36:42500, /127.0.0.1:42500, hdpdev6_oob.nseroot.com/172.17.241.80:42500], discPort=42500, order=1, intOrder=1, lastExchangeTime=1574156266010, loc=false, ver=2.6.0#20180710-sha1:669feacc, isClient=false]
+2019-11-19 15:09:25.587 ERROR 151747 --- [ent-worker-#101] poc.ignite.service.EventsService         : nNodes: 2
+
+----------
+
+NODE 3
+
+$JAVA_HOME/bin/java -jar ignite-events-0.0.1-SNAPSHOT.jar
+
+2019-11-19 15:08:04.159  INFO 152010 --- [           main] o.a.i.i.m.d.GridDiscoveryManager         : Topology snapshot [ver=3, servers=3, clients=0, CPUs=32, offheap=3.0GB, heap=80.0GB]
+
+After killing NODE 1
+
+2019-11-19 15:09:25.558  INFO 152010 --- [ent-worker-#101] o.a.i.i.m.d.GridDiscoveryManager         : Topology snapshot [ver=4, servers=2, clients=0, CPUs=32, offheap=2.0GB, heap=53.0GB]
+2019-11-19 15:09:25.586 ERROR 152010 --- [ent-worker-#101] poc.ignite.service.EventsService         : name: NODE_LEFT
+2019-11-19 15:09:25.587 ERROR 152010 --- [ent-worker-#101] poc.ignite.service.EventsService         : message: Node left: TcpDiscoveryNode [id=005c993d-c512-4fad-a78a-6f90eb56ad77, addrs=[127.0.0.1, 172.17.241.80, 172.17.5.36], sockAddrs=[hdpdev6/172.17.5.36:42500, /127.0.0.1:42500, hdpdev6_oob.nseroot.com/172.17.241.80:42500], discPort=42500, order=1, intOrder=1, lastExchangeTime=1574156283465, loc=false, ver=2.6.0#20180710-sha1:669feacc, isClient=false]
+2019-11-19 15:09:25.587 ERROR 152010 --- [ent-worker-#101] poc.ignite.service.EventsService         : nNodes: 2
+
+After killing NODE 2
+
+2019-11-19 15:09:50.203  INFO 152010 --- [ent-worker-#101] o.a.i.i.m.d.GridDiscoveryManager         : Topology snapshot [ver=5, servers=1, clients=0, CPUs=32, offheap=1.0GB, heap=27.0GB]
+2019-11-19 15:09:50.203  INFO 152010 --- [ent-worker-#101] o.a.i.i.m.d.GridDiscoveryManager         :   ^-- Node [id=4D4D43A6-D72E-4032-958D-8FE02539D5B7, clusterState=ACTIVE]
+2019-11-19 15:09:50.204  INFO 152010 --- [ent-worker-#101] o.a.i.i.m.d.GridDiscoveryManager         : Data Regions Configured:
+2019-11-19 15:09:50.204  INFO 152010 --- [ent-worker-#101] o.a.i.i.m.d.GridDiscoveryManager         :   ^-- default [initSize=1.0 GiB, maxSize=1.0 GiB, persistenceEnabled=false]
+2019-11-19 15:09:50.205  INFO 152010 --- [       sys-#130] o.a.i.i.p.c.d.d.p.l.ExchangeLatchManager : Become new coordinator 4d4d43a6-d72e-4032-958d-8fe02539d5b7
+2019-11-19 15:09:50.205  INFO 152010 --- [nge-worker-#102] o.apache.ignite.internal.exchange.time   : Started exchange init [topVer=AffinityTopologyVersion [topVer=5, minorTopVer=0], crd=true, evt=NODE_LEFT, evtNode=8771d0fc-98a0-4a1f-9336-d27bfe66c8d4, customEvt=null, allowMerge=true]
+2019-11-19 15:09:50.206 ERROR 152010 --- [ent-worker-#101] poc.ignite.service.EventsService         : name: NODE_LEFT
+2019-11-19 15:09:50.206 ERROR 152010 --- [ent-worker-#101] poc.ignite.service.EventsService         : message: Node left: TcpDiscoveryNode [id=8771d0fc-98a0-4a1f-9336-d27bfe66c8d4, addrs=[127.0.0.1, 172.17.241.80, 172.17.5.36], sockAddrs=[hdpdev6/172.17.5.36:42501, /127.0.0.1:42501, hdpdev6_oob.nseroot.com/172.17.241.80:42501], discPort=42501, order=2, intOrder=2, lastExchangeTime=1574156283465, loc=false, ver=2.6.0#20180710-sha1:669feacc, isClient=false]
+2019-11-19 15:09:50.206 ERROR 152010 --- [ent-worker-#101] poc.ignite.service.EventsService         : nNodes: 1
 
 ----------==----------
