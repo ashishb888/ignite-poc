@@ -50,10 +50,21 @@ public class EventsService {
 			String name = event.name();
 			String cacheName = event.cacheName();
 
+			int nNodes = ignite.cluster().nodes().size();
+
+			log.error("name: " + name);
+			log.error("message: " + message);
+			log.error("nNodes: " + nNodes);
+
 			return true;
 		};
 
 		ignite.events().localListen(eventListener, EventType.EVT_NODE_LEFT, EventType.EVT_CACHE_NODES_LEFT);
+		ignite.events().localListen(cacheEventListener, EventType.EVT_NODE_LEFT, EventType.EVT_CACHE_NODES_LEFT);
+		// 2019-11-19 15:22:03.964 WARN 156008 --- [ main]
+		// o.a.i.i.m.e.GridEventStorageManager : Added listener for disabled event type:
+		// CACHE_NODES_LEFT
+
 	}
 
 	private void start() {
