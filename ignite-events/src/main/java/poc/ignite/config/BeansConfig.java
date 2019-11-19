@@ -72,6 +72,8 @@ public class BeansConfig {
 
 			ignite = Ignition.getOrStart(igniteConfiguration);
 
+			ignite.atomicLong("isAllUp", 0, true);
+
 		} catch (IgniteException e) {
 			log.error("Exception", e);
 		}

@@ -50,3 +50,59 @@ After killing NODE 2
 2019-11-19 15:09:50.206 ERROR 152010 --- [ent-worker-#101] poc.ignite.service.EventsService         : nNodes: 1
 
 ----------==----------
+
+RUN 2 EventsService
+
+NODE 1
+
+$JAVA_HOME/bin/java -jar ignite-events-0.0.1-SNAPSHOT.jar
+
+2019-11-19 15:44:12.691  INFO 162282 --- [ent-worker-#101] o.a.i.i.m.d.GridDiscoveryManager         : Topology snapshot [ver=2, servers=2, clients=0, CPUs=32, offheap=2.0GB, heap=53.0GB]
+2019-11-19 15:44:12.692  INFO 162282 --- [ent-worker-#101] o.a.i.i.m.d.GridDiscoveryManager         :   ^-- Node [id=5EC9F3A9-1D78-407A-B45C-DD2DEA2668BA, clusterState=ACTIVE]
+2019-11-19 15:44:12.692  INFO 162282 --- [ent-worker-#101] o.a.i.i.m.d.GridDiscoveryManager         : Data Regions Configured:
+2019-11-19 15:44:12.693  INFO 162282 --- [ent-worker-#101] o.a.i.i.m.d.GridDiscoveryManager         :   ^-- default [initSize=1.0 GiB, maxSize=1.0 GiB, persistenceEnabled=false]
+2019-11-19 15:44:12.695  INFO 162282 --- [nge-worker-#102] o.apache.ignite.internal.exchange.time   : Started exchange init [topVer=AffinityTopologyVersion [topVer=2, minorTopVer=0], crd=true, evt=NODE_JOINED, evtNode=15e64e5f-9c2e-4bf4-b09e-9e7564d7e6e4, customEvt=null, allowMerge=true]
+2019-11-19 15:44:12.695 ERROR 162282 --- [ent-worker-#101] poc.ignite.service.EventsService         : name: NODE_JOINED
+2019-11-19 15:44:13.388 DEBUG 162282 --- [pool-2-thread-1] poc.ignite.service.EventsService         : isAllUp: 0
+2019-11-19 15:44:14.388 DEBUG 162282 --- [pool-2-thread-1] poc.ignite.service.EventsService         : isAllUp: 0
+
+----------
+
+NODE 2
+
+$JAVA_HOME/bin/java -jar ignite-events-0.0.1-SNAPSHOT.jar
+
+2019-11-19 15:44:21.988  INFO 162656 --- [           main] o.a.i.i.m.d.GridDiscoveryManager         : Topology snapshot [ver=3, servers=3, clients=0, CPUs=32, offheap=3.0GB, heap=80.0GB]
+2019-11-19 15:44:23.353 DEBUG 162656 --- [pool-2-thread-1] poc.ignite.service.EventsService         : isAllUp: 1
+
+
+After killing NODE 3
+
+2019-11-19 15:44:37.473  INFO 162656 --- [ent-worker-#101] o.a.i.i.m.d.GridDiscoveryManager         : Topology snapshot [ver=4, servers=2, clients=0, CPUs=32, offheap=2.0GB, heap=53.0GB]
+2019-11-19 15:44:37.473  INFO 162656 --- [ent-worker-#101] o.a.i.i.m.d.GridDiscoveryManager         :   ^-- Node [id=B8CA22A4-1FA5-43F0-BC82-11B7EF1632B1, clusterState=ACTIVE]
+2019-11-19 15:44:37.474  INFO 162656 --- [ent-worker-#101] o.a.i.i.m.d.GridDiscoveryManager         : Data Regions Configured:
+2019-11-19 15:44:37.474  INFO 162656 --- [ent-worker-#101] o.a.i.i.m.d.GridDiscoveryManager         :   ^-- default [initSize=1.0 GiB, maxSize=1.0 GiB, persistenceEnabled=false]
+2019-11-19 15:44:37.497 ERROR 162656 --- [ent-worker-#101] poc.ignite.service.EventsService         : name: NODE_LEFT
+2019-11-19 15:44:37.498 ERROR 162656 --- [ent-worker-#101] poc.ignite.service.EventsService         : message: Node left: TcpDiscoveryNode [id=15e64e5f-9c2e-4bf4-b09e-9e7564d7e6e4, addrs=[127.0.0.1, 172.17.241.80, 172.17.5.36], sockAddrs=[hdpdev6/172.17.5.36:42501, /127.0.0.1:42501, hdpdev6_oob.nseroot.com/172.17.241.80:42501], discPort=42501, order=2, intOrder=2, lastExchangeTime=1574158461192, loc=false, ver=2.6.0#20180710-sha1:669feacc, isClient=false]
+2019-11-19 15:44:37.498 ERROR 162656 --- [ent-worker-#101] poc.ignite.service.EventsService         : nNodes: 2
+2019-11-19 15:44:38.345 DEBUG 162656 --- [pool-2-thread-1] poc.ignite.service.EventsService         : isAllUp: 0
+
+----------
+
+NODE 3
+
+$JAVA_HOME/bin/java -jar ignite-events-0.0.1-SNAPSHOT.jar
+
+2019-11-19 15:44:21.242  INFO 162416 --- [ent-worker-#101] o.a.i.i.m.d.GridDiscoveryManager         : Topology snapshot [ver=3, servers=3, clients=0, CPUs=32, offheap=3.0GB, heap=80.0GB]
+2019-11-19 15:44:21.242  INFO 162416 --- [ent-worker-#101] o.a.i.i.m.d.GridDiscoveryManager         :   ^-- Node [id=15E64E5F-9C2E-4BF4-B09E-9E7564D7E6E4, clusterState=ACTIVE]
+2019-11-19 15:44:21.242  INFO 162416 --- [ent-worker-#101] o.a.i.i.m.d.GridDiscoveryManager         : Data Regions Configured:
+2019-11-19 15:44:21.242  INFO 162416 --- [ent-worker-#101] o.a.i.i.m.d.GridDiscoveryManager         :   ^-- default [initSize=1.0 GiB, maxSize=1.0 GiB, persistenceEnabled=false]
+2019-11-19 15:44:21.243  INFO 162416 --- [nge-worker-#102] o.apache.ignite.internal.exchange.time   : Started exchange init [topVer=AffinityTopologyVersion [topVer=3, minorTopVer=0], crd=false, evt=NODE_JOINED, evtNode=b8ca22a4-1fa5-43f0-bc82-11b7ef1632b1, customEvt=null, allowMerge=true]
+2019-11-19 15:44:21.243 ERROR 162416 --- [ent-worker-#101] poc.ignite.service.EventsService         : name: NODE_JOINED
+2019-11-19 15:44:21.243 ERROR 162416 --- [ent-worker-#101] poc.ignite.service.EventsService         : message: Node joined: TcpDiscoveryNode [id=b8ca22a4-1fa5-43f0-bc82-11b7ef1632b1, addrs=[127.0.0.1, 172.17.241.80, 172.17.5.36], sockAddrs=[hdpdev6_oob.nseroot.com/172.17.241.80:42502, hdpdev6/172.17.5.36:42502, /127.0.0.1:42502], discPort=42502, order=3, intOrder=3, lastExchangeTime=1574158461159, loc=false, ver=2.6.0#20180710-sha1:669feacc, isClient=false]
+2019-11-19 15:44:21.243 ERROR 162416 --- [ent-worker-#101] poc.ignite.service.EventsService         : nNodes: 3
+2019-11-19 15:44:21.790 DEBUG 162416 --- [pool-2-thread-1] poc.ignite.service.EventsService         : isAllUp: 0
+2019-11-19 15:44:21.904  INFO 162416 --- [-tcp-comm-1-#74] o.a.i.s.c.tcp.TcpCommunicationSpi        : Accepted incoming communication connection [locAddr=/127.0.0.1:42101, rmtAddr=/127.0.0.1:46610]
+2019-11-19 15:44:22.791 DEBUG 162416 --- [pool-2-thread-1] poc.ignite.service.EventsService         : isAllUp: 1
+
+----------==----------
