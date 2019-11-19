@@ -55,10 +55,38 @@ public class ComputeService {
 		}, "affinity-run").start();
 	}
 
+	private void affinityCall() {
+		log.debug("affinityCall service");
+
+		List<String> affKeys = new ArrayList<>();
+		affKeys.add("07-JAN-2019");
+		affKeys.add("08-JAN-2019");
+		affKeys.add("09-JAN-2019");
+
+		new Thread(() -> {
+
+			while (true) {
+				affKeys.forEach(affKey -> {
+					long entries = ignite.compute().affinityCall("stock-trade-cache", affKey,
+							new IC(affKey, "stock-trade-cache"));
+					log.debug("entries: " + entries);
+				});
+
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					log.error(e.getMessage(), e);
+				}
+			}
+
+		}, "affinity-call").start();
+	}
+
 	private void compute() {
 		log.debug("compute service");
 
-		affinityRun();
+		// affinityRun();
+		affinityCall();
 	}
 
 	static class IR implements IgniteRunnable {
@@ -141,6 +169,8 @@ public class ComputeService {
 					StockTrade st = entry.getValue();
 					st.setIsin("From compute");
 					entries += 1;
+
+					cache.put(entry.getKey(), st);
 				}
 			}
 

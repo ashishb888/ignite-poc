@@ -1,4 +1,4 @@
-RUN 1
+RUN 1 affinityRun
 
 $JAVA_HOME/bin/java -jar ignite-compute-server-0.0.1-SNAPSHOT.jar
 
@@ -16,24 +16,24 @@ $JAVA_HOME/bin/java -jar ignite-compute-server-0.0.1-SNAPSHOT.jar
 2019-11-19 19:27:15.597 DEBUG 24783 --- [       pub-#145] poc.ignite.service.ComputeService$IR     : k: 09-JAN-2019, cacheName: stock-trade-cache
 2019-11-19 19:27:15.600 DEBUG 24783 --- [       pub-#145] poc.ignite.service.ComputeService$IR     : entries: 10
 
-[hdpusr@hdpdev6 ignite-events]$ netstat -lnp | grep 20923
+[user@host ignite-events]$ netstat -lnp | grep 20923
 (Not all processes could be identified, non-owned process info
  will not be shown, you would have to be root to see it all.)
 tcp        0      0 0.0.0.0:11211           0.0.0.0:*               LISTEN      20923/java
 tcp        0      0 0.0.0.0:10800           0.0.0.0:*               LISTEN      20923/java
 tcp        0      0 0.0.0.0:42100           0.0.0.0:*               LISTEN      20923/java
 tcp        0      0 0.0.0.0:42500           0.0.0.0:*               LISTEN      20923/java
-[hdpusr@hdpdev6 ignite-events]$ $IGNITE_HOME/bin/sqlline.sh --verbose=true -u jdbc:ignite:thin://hdpdev6:10800
+[user@host ignite-events]$ $IGNITE_HOME/bin/sqlline.sh --verbose=true -u jdbc:ignite:thin://host:10800
 
 
-0: jdbc:ignite:thin://hdpdev6:10800> select count(*) from "STS".STOCKTRADE;
+0: jdbc:ignite:thin://host:10800> select count(*) from "STS".STOCKTRADE;
 +--------------------------------+
 |            COUNT(*)            |
 +--------------------------------+
 | 5733                           |
 +--------------------------------+
 1 row selected (0.007 seconds)
-0: jdbc:ignite:thin://hdpdev6:10800> select timestamp from "STS".STOCKTRADE limit 10;
+0: jdbc:ignite:thin://host:10800> select timestamp from "STS".STOCKTRADE limit 10;
 +--------------------------------+
 |           TIMESTAMP            |
 +--------------------------------+
@@ -49,55 +49,55 @@ tcp        0      0 0.0.0.0:42500           0.0.0.0:*               LISTEN      
 | 08-JAN-2019                    |
 +--------------------------------+
 10 rows selected (0.01 seconds)
-0: jdbc:ignite:thin://hdpdev6:10800> select count(*) from "STS".STOCKTRADE where isin='From compute';
+0: jdbc:ignite:thin://host:10800> select count(*) from "STS".STOCKTRADE where isin='From compute';
 +--------------------------------+
 |            COUNT(*)            |
 +--------------------------------+
 | 0                              |
 +--------------------------------+
 1 row selected (0.021 seconds)
-0: jdbc:ignite:thin://hdpdev6:10800>
+0: jdbc:ignite:thin://host:10800>
 
 ----------After started compute job----------
 
-0: jdbc:ignite:thin://hdpdev6:10800> select count(*) from "STS".STOCKTRADE where isin='From compute';
+0: jdbc:ignite:thin://host:10800> select count(*) from "STS".STOCKTRADE where isin='From compute';
 +--------------------------------+
 |            COUNT(*)            |
 +--------------------------------+
 | 30                             |
 +--------------------------------+
 1 row selected (0.02 seconds)
-0: jdbc:ignite:thin://hdpdev6:10800> select count(*) from "STS".STOCKTRADE where isin='From compute';
+0: jdbc:ignite:thin://host:10800> select count(*) from "STS".STOCKTRADE where isin='From compute';
 +--------------------------------+
 |            COUNT(*)            |
 +--------------------------------+
 | 60                             |
 +--------------------------------+
 1 row selected (0.014 seconds)
-0: jdbc:ignite:thin://hdpdev6:10800> select count(*) from "STS".STOCKTRADE where isin='From compute';
+0: jdbc:ignite:thin://host:10800> select count(*) from "STS".STOCKTRADE where isin='From compute';
 +--------------------------------+
 |            COUNT(*)            |
 +--------------------------------+
 | 108                            |
 +--------------------------------+
 1 row selected (0.013 seconds)
-0: jdbc:ignite:thin://hdpdev6:10800> select count(*) from "STS".STOCKTRADE where isin='From compute';
+0: jdbc:ignite:thin://host:10800> select count(*) from "STS".STOCKTRADE where isin='From compute';
 +--------------------------------+
 |            COUNT(*)            |
 +--------------------------------+
 | 210                            |
 +--------------------------------+
 1 row selected (0.015 seconds)
-0: jdbc:ignite:thin://hdpdev6:10800>
+0: jdbc:ignite:thin://host:10800>
 
-0: jdbc:ignite:thin://hdpdev6:10800> select count(*) from "STS".STOCKTRADE where isin='From compute';
+0: jdbc:ignite:thin://host:10800> select count(*) from "STS".STOCKTRADE where isin='From compute';
 +--------------------------------+
 |            COUNT(*)            |
 +--------------------------------+
 | 5733                           |
 +--------------------------------+
 1 row selected (0.019 seconds)
-0: jdbc:ignite:thin://hdpdev6:10800>
+0: jdbc:ignite:thin://host:10800>
 
 
 
@@ -112,5 +112,64 @@ $JAVA_HOME/bin/java -jar ignite-compute-client-0.0.1-SNAPSHOT.jar
 2019-11-19 19:26:56.950 DEBUG 25200 --- [           main] poc.ignite.service.ComputeService        : affinityRun service
 2019-11-19 19:26:57.057  INFO 25200 --- [   affinity-run] o.a.i.i.m.d.GridDeploymentLocalStore     : Class locally deployed: class org.apache.ignite.cache.affinity.rendezvous.RendezvousAffinityFunction
 2019-11-19 19:26:57.060  INFO 25200 --- [   affinity-run] o.a.i.i.m.d.GridDeploymentLocalStore     : Class locally deployed: class poc.ignite.service.ComputeService$IR
+
+----------==----------
+
+RUN 2 affinityCall
+
+$JAVA_HOME/bin/java -jar ignite-compute-client-0.0.1-SNAPSHOT.jar
+
+2019-11-19 19:39:29.317  INFO 30017 --- [           main] poc.ignite.IgniteApp                     : Started IgniteApp in 3.311 seconds (JVM running for 3.751)
+2019-11-19 19:39:29.318  INFO 30017 --- [           main] poc.ignite.IgniteApp                     : run service
+2019-11-19 19:39:29.318 DEBUG 30017 --- [           main] poc.ignite.service.IgniteService         : main service
+2019-11-19 19:39:29.318 DEBUG 30017 --- [           main] poc.ignite.service.ComputeService        : main service
+2019-11-19 19:39:29.318 DEBUG 30017 --- [           main] poc.ignite.service.ComputeService        : start service
+2019-11-19 19:39:29.319 DEBUG 30017 --- [           main] poc.ignite.service.ComputeService        : compute service
+2019-11-19 19:39:29.319 DEBUG 30017 --- [           main] poc.ignite.service.ComputeService        : affinityCall service
+2019-11-19 19:39:29.370  INFO 30017 --- [  affinity-call] o.a.i.i.m.d.GridDeploymentLocalStore     : Class locally deployed: class org.apache.ignite.cache.affinity.rendezvous.RendezvousAffinityFunction
+2019-11-19 19:39:29.373  INFO 30017 --- [  affinity-call] o.a.i.i.m.d.GridDeploymentLocalStore     : Class locally deployed: class poc.ignite.service.ComputeService$IC
+2019-11-19 19:39:29.405 DEBUG 30017 --- [  affinity-call] poc.ignite.service.ComputeService        : entries: 10
+2019-11-19 19:39:29.413 DEBUG 30017 --- [  affinity-call] poc.ignite.service.ComputeService        : entries: 10
+2019-11-19 19:39:29.421 DEBUG 30017 --- [  affinity-call] poc.ignite.service.ComputeService        : entries: 10
+
+
+0: jdbc:ignite:thin://host:10800> select count(*) from "STS".STOCKTRADE;
++--------------------------------+
+|            COUNT(*)            |
++--------------------------------+
+| 5733                           |
++--------------------------------+
+1 row selected (0.008 seconds)
+0: jdbc:ignite:thin://host:10800> select timestamp from "STS".STOCKTRADE limit 10;
++--------------------------------+
+|           TIMESTAMP            |
++--------------------------------+
+| 09-JAN-2019                    |
+| 09-JAN-2019                    |
+| 07-JAN-2019                    |
+| 09-JAN-2019                    |
+| 07-JAN-2019                    |
+| 07-JAN-2019                    |
+| 08-JAN-2019                    |
+| 09-JAN-2019                    |
+| 09-JAN-2019                    |
+| 08-JAN-2019                    |
++--------------------------------+
+10 rows selected (0.013 seconds)
+0: jdbc:ignite:thin://host:10800> select count(*) from "STS".STOCKTRADE where isin='From compute';
++--------------------------------+
+|            COUNT(*)            |
++--------------------------------+
+| 0                              |
++--------------------------------+
+
+0: jdbc:ignite:thin://host:10800> select count(*) from "STS".STOCKTRADE where isin='From compute';
++--------------------------------+
+|            COUNT(*)            |
++--------------------------------+
+| 150                            |
++--------------------------------+
+1 row selected (0.013 seconds)
+
 
 ----------==----------
