@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: ignite-events
+
+logging:
+  file: /var/tmp/logs/ignite-events/ignite-events
+  level:
+    root: INFO
+    poc.ignite: debug
+
+ignite:
+  other:
+    blankNode: false
+  cache:
+    backups: 0
