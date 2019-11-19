@@ -1,0 +1,78 @@
+RUN 1
+
+[hdpusr@hdpdev6 ignite-events]$ netstat -lnp | grep 20923
+(Not all processes could be identified, non-owned process info
+ will not be shown, you would have to be root to see it all.)
+tcp        0      0 0.0.0.0:11211           0.0.0.0:*               LISTEN      20923/java
+tcp        0      0 0.0.0.0:10800           0.0.0.0:*               LISTEN      20923/java
+tcp        0      0 0.0.0.0:42100           0.0.0.0:*               LISTEN      20923/java
+tcp        0      0 0.0.0.0:42500           0.0.0.0:*               LISTEN      20923/java
+[hdpusr@hdpdev6 ignite-events]$ $IGNITE_HOME/bin/sqlline.sh --verbose=true -u jdbc:ignite:thin://hdpdev6:10800
+
+
+0: jdbc:ignite:thin://hdpdev6:10800> select count(*) from "STS".STOCKTRADE;
++--------------------------------+
+|            COUNT(*)            |
++--------------------------------+
+| 5733                           |
++--------------------------------+
+1 row selected (0.007 seconds)
+0: jdbc:ignite:thin://hdpdev6:10800> select timestamp from "STS".STOCKTRADE limit 10;
++--------------------------------+
+|           TIMESTAMP            |
++--------------------------------+
+| 09-JAN-2019                    |
+| 09-JAN-2019                    |
+| 07-JAN-2019                    |
+| 09-JAN-2019                    |
+| 07-JAN-2019                    |
+| 07-JAN-2019                    |
+| 08-JAN-2019                    |
+| 09-JAN-2019                    |
+| 09-JAN-2019                    |
+| 08-JAN-2019                    |
++--------------------------------+
+10 rows selected (0.01 seconds)
+0: jdbc:ignite:thin://hdpdev6:10800> select count(*) from "STS".STOCKTRADE where isin='From compute';
++--------------------------------+
+|            COUNT(*)            |
++--------------------------------+
+| 0                              |
++--------------------------------+
+1 row selected (0.021 seconds)
+0: jdbc:ignite:thin://hdpdev6:10800>
+
+----------After started compute job----------
+
+0: jdbc:ignite:thin://hdpdev6:10800> select count(*) from "STS".STOCKTRADE where isin='From compute';
++--------------------------------+
+|            COUNT(*)            |
++--------------------------------+
+| 30                             |
++--------------------------------+
+1 row selected (0.02 seconds)
+0: jdbc:ignite:thin://hdpdev6:10800> select count(*) from "STS".STOCKTRADE where isin='From compute';
++--------------------------------+
+|            COUNT(*)            |
++--------------------------------+
+| 60                             |
++--------------------------------+
+1 row selected (0.014 seconds)
+0: jdbc:ignite:thin://hdpdev6:10800> select count(*) from "STS".STOCKTRADE where isin='From compute';
++--------------------------------+
+|            COUNT(*)            |
++--------------------------------+
+| 108                            |
++--------------------------------+
+1 row selected (0.013 seconds)
+0: jdbc:ignite:thin://hdpdev6:10800> select count(*) from "STS".STOCKTRADE where isin='From compute';
++--------------------------------+
+|            COUNT(*)            |
++--------------------------------+
+| 210                            |
++--------------------------------+
+1 row selected (0.015 seconds)
+0: jdbc:ignite:thin://hdpdev6:10800>
+
+
+----------==----------

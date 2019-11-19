@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: ignite-compute-client
+
+logging:
+  file: /var/tmp/logs/ignite-compute-client/ignite-compute-client
+  level:
+    root: INFO
+    poc.ignite: debug
+
+ignite:
+  other:
+    blankNode: false
+  cache:
+    backups: 0
+
