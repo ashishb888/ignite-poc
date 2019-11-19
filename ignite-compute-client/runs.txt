@@ -74,5 +74,14 @@ tcp        0      0 0.0.0.0:42500           0.0.0.0:*               LISTEN      
 1 row selected (0.015 seconds)
 0: jdbc:ignite:thin://hdpdev6:10800>
 
+0: jdbc:ignite:thin://hdpdev6:10800> select count(*) from "STS".STOCKTRADE where isin='From compute';
++--------------------------------+
+|            COUNT(*)            |
++--------------------------------+
+| 5733                           |
++--------------------------------+
+1 row selected (0.019 seconds)
+0: jdbc:ignite:thin://hdpdev6:10800>
+
 
 ----------==----------
