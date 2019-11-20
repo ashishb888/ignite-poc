@@ -85,6 +85,11 @@ public class EventsService {
 
 		ignite.events().localListen(eventListener, EventType.EVT_NODE_LEFT, EventType.EVT_NODE_JOINED,
 				EventType.EVT_NODE_FAILED);
+
+		// ignite.events(ignite.cluster().forServers()).localListen(eventListener,
+		// EventType.EVT_NODE_LEFT,
+		// EventType.EVT_NODE_JOINED, EventType.EVT_NODE_FAILED);
+
 		// ignite.events().localListen(cacheEventListener, EventType.EVT_NODE_LEFT,
 		// EventType.EVT_CACHE_NODES_LEFT);
 		// 2019-11-19 15:22:03.964 WARN 156008 --- [ main]
