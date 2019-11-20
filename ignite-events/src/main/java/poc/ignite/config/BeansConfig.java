@@ -11,14 +11,18 @@ import org.apache.ignite.logger.slf4j.Slf4jLogger;
 import org.apache.ignite.spi.communication.tcp.TcpCommunicationSpi;
 import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi;
 import org.apache.ignite.spi.discovery.tcp.ipfinder.vm.TcpDiscoveryVmIpFinder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import lombok.extern.slf4j.Slf4j;
+import poc.ignite.properties.IgniteProperties;
 
 @Configuration
 @Slf4j
 public class BeansConfig {
+	@Autowired
+	private IgniteProperties ip;
 
 	@Bean
 	public Ignite ignite() {
@@ -67,6 +71,7 @@ public class BeansConfig {
 			igniteConfiguration.setSystemThreadPoolSize(16);
 			igniteConfiguration.setPeerClassLoadingEnabled(false);
 			// igniteConfiguration.setIgniteInstanceName("test";)
+			igniteConfiguration.setClientMode(Boolean.valueOf(ip.getOther().get("clientMode")));
 
 			igniteConfiguration.setGridLogger(new Slf4jLogger());
 

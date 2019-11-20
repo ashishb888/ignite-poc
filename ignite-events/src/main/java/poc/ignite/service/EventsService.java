@@ -32,9 +32,9 @@ public class EventsService {
 			String name = event.name();
 			int nNodes = ignite.cluster().nodes().size();
 
-			log.error("name: " + name);
-			log.error("message: " + message);
-			log.error("nNodes: " + nNodes);
+			log.debug("name: " + name);
+			log.debug("message: " + message);
+			log.debug("nNodes: " + nNodes);
 
 			if (nNodes != Integer.valueOf(ip.getOther().get("nNodes")))
 				ignite.atomicLong("isAllUp", 0, false).getAndSet(0);
@@ -51,10 +51,10 @@ public class EventsService {
 
 			int nNodes = ignite.cluster().nodes().size();
 
-			log.error("name: " + name);
-			log.error("cacheName: " + cacheName);
-			log.error("message: " + message);
-			log.error("nNodes: " + nNodes);
+			log.debug("name: " + name);
+			log.debug("cacheName: " + cacheName);
+			log.debug("message: " + message);
+			log.debug("nNodes: " + nNodes);
 
 			return true;
 		};

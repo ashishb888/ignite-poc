@@ -11,6 +11,7 @@ logging:
 ignite:
   other:
     blankNode: false
+    clientMode: false
     nNodes: 3
   cache:
     backups: 0
