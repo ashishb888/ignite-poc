@@ -12,6 +12,7 @@ import org.apache.ignite.cache.query.SqlQuery;
 import org.apache.ignite.lang.IgniteCallable;
 import org.apache.ignite.lang.IgniteRunnable;
 import org.apache.ignite.resources.IgniteInstanceResource;
+import org.apache.ignite.resources.ServiceResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,11 +83,65 @@ public class ComputeService {
 		}, "affinity-call").start();
 	}
 
+	private void affinityRunWithService() {
+		log.debug("affinityRunWithService service");
+
+		List<String> affKeys = new ArrayList<>();
+		affKeys.add("07-JAN-2019");
+		affKeys.add("08-JAN-2019");
+		affKeys.add("09-JAN-2019");
+
+		new Thread(() -> {
+
+			while (true) {
+				affKeys.forEach(affKey -> {
+					ignite.compute().affinityRun("stock-trade-cache", affKey,
+							new IRWithService(affKey, "stock-trade-cache"));
+				});
+
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					log.error(e.getMessage(), e);
+				}
+			}
+
+		}, "affinity-run-with-service").start();
+	}
+
+	private void affinityCallWithService() {
+		log.debug("affinityCallWithService service");
+
+		List<String> affKeys = new ArrayList<>();
+		affKeys.add("07-JAN-2019");
+		affKeys.add("08-JAN-2019");
+		affKeys.add("09-JAN-2019");
+
+		new Thread(() -> {
+
+			while (true) {
+				affKeys.forEach(affKey -> {
+					long entries = ignite.compute().affinityCall("stock-trade-cache", affKey,
+							new ICWithService(affKey, "stock-trade-cache"));
+					log.debug("entries: " + entries);
+				});
+
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					log.error(e.getMessage(), e);
+				}
+			}
+
+		}, "affinity-call-with-service").start();
+	}
+
 	private void compute() {
 		log.debug("compute service");
 
 		// affinityRun();
-		affinityCall();
+		// affinityCall();
+		affinityRunWithService();
 	}
 
 	static class IR implements IgniteRunnable {
@@ -94,7 +149,7 @@ public class ComputeService {
 		@IgniteInstanceResource
 		private Ignite ignite;
 
-		String key;
+		String affKey;
 		String cacheName;
 
 		private static final long serialVersionUID = -7262215173125724166L;
@@ -102,19 +157,19 @@ public class ComputeService {
 		IR() {
 		}
 
-		IR(String key, String cacheName) {
-			this.key = key;
+		IR(String affKey, String cacheName) {
+			this.affKey = affKey;
 			this.cacheName = cacheName;
 		}
 
 		@Override
 		public void run() {
-			logger.debug("k: " + key + ", cacheName: " + cacheName);
+			logger.debug("k: " + affKey + ", cacheName: " + cacheName);
 
 			IgniteCache<StockTradeKey, StockTrade> cache = ignite.cache(cacheName);// .withKeepBinary();
 			SqlQuery<StockTradeKey, StockTrade> sqlQuery = new SqlQuery<>(StockTrade.class,
 					"timestamp = ? and isin != ? limit ?");
-			sqlQuery.setArgs(key, "From compute", 10);
+			sqlQuery.setArgs(affKey, "From compute", 10);
 
 			long entries = 0;
 
@@ -140,14 +195,14 @@ public class ComputeService {
 		@IgniteInstanceResource
 		private Ignite ignite;
 
-		String key;
+		String affKey;
 		String cacheName;
 
 		IC() {
 		}
 
-		IC(String key, String cacheName) {
-			this.key = key;
+		IC(String affKey, String cacheName) {
+			this.affKey = affKey;
 			this.cacheName = cacheName;
 		}
 
@@ -155,12 +210,12 @@ public class ComputeService {
 
 		@Override
 		public Long call() throws Exception {
-			logger.info("k: " + key + ", cacheName: " + cacheName);
+			logger.info("k: " + affKey + ", cacheName: " + cacheName);
 
 			IgniteCache<StockTradeKey, StockTrade> cache = ignite.cache(cacheName);
 			SqlQuery<StockTradeKey, StockTrade> sqlQuery = new SqlQuery<>(StockTrade.class,
 					"timestamp = ? and isin != ? limit ?");
-			sqlQuery.setArgs(key, "From compute", 10);
+			sqlQuery.setArgs(affKey, "From compute", 10);
 
 			long entries = 0;
 
@@ -173,6 +228,69 @@ public class ComputeService {
 					cache.put(entry.getKey(), st);
 				}
 			}
+
+			logger.info("entries: " + entries);
+
+			return entries;
+		}
+
+	}
+
+	static class IRWithService implements IgniteRunnable {
+		Logger logger = LoggerFactory.getLogger(this.getClass());
+		@IgniteInstanceResource
+		private Ignite ignite;
+		@ServiceResource(serviceName = "sampleService", proxyInterface = SampleService.class)
+		private SampleService sampleService;
+
+		String affKey;
+		String cacheName;
+
+		private static final long serialVersionUID = -7262215173125724166L;
+
+		IRWithService() {
+		}
+
+		IRWithService(String affKey, String cacheName) {
+			this.affKey = affKey;
+			this.cacheName = cacheName;
+		}
+
+		@Override
+		public void run() {
+			logger.debug("k: " + affKey + ", cacheName: " + cacheName);
+
+			sampleService.run(cacheName, affKey);
+		}
+
+	}
+
+	static class ICWithService implements IgniteCallable<Long> {
+		Logger logger = LoggerFactory.getLogger(this.getClass());
+
+		@IgniteInstanceResource
+		private Ignite ignite;
+		@ServiceResource(serviceName = "sampleService", proxyInterface = SampleService.class)
+		private SampleService sampleService;
+
+		String affKey;
+		String cacheName;
+
+		ICWithService() {
+		}
+
+		ICWithService(String affKey, String cacheName) {
+			this.affKey = affKey;
+			this.cacheName = cacheName;
+		}
+
+		private static final long serialVersionUID = -1290099421708832298L;
+
+		@Override
+		public Long call() throws Exception {
+			logger.info("k: " + affKey + ", cacheName: " + cacheName);
+
+			long entries = sampleService.call(cacheName, affKey);
 
 			logger.info("entries: " + entries);
 

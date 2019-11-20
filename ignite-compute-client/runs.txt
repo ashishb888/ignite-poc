@@ -173,3 +173,48 @@ $JAVA_HOME/bin/java -jar ignite-compute-client-0.0.1-SNAPSHOT.jar
 
 
 ----------==----------
+
+RUN 3 affinityRunWithService
+
+[user@host ignite-compute-server]$ $JAVA_HOME/bin/java -jar ignite-compute-server-0.0.1-SNAPSHOT.jar
+
+2019-11-20 17:42:43.592  INFO 178842 --- [           main] poc.ignite.IgniteApp                     : Started IgniteApp in 3.475 seconds (JVM running for 3.929)
+2019-11-20 17:42:43.593  INFO 178842 --- [           main] poc.ignite.IgniteApp                     : run service
+2019-11-20 17:42:43.593 DEBUG 178842 --- [           main] poc.ignite.service.IgniteService         : main service
+2019-11-20 17:42:43.593 DEBUG 178842 --- [           main] poc.ignite.service.ComputeService        : main service
+2019-11-20 17:42:43.593 DEBUG 178842 --- [           main] poc.ignite.service.ComputeService        : start service
+2019-11-20 17:42:43.593 DEBUG 178842 --- [           main] poc.ignite.service.ComputeService        : init service
+2019-11-20 17:42:43.632 DEBUG 178842 --- [rvc-deploy-#103] p.ignite.service.impl.SampleServiceImpl  : init service
+2019-11-20 17:42:43.632 DEBUG 178842 --- [rvc-deploy-#103] p.ignite.service.impl.SampleServiceImpl  : initCache service
+2019-11-20 17:42:43.660  INFO 178842 --- [nge-worker-#102] o.apache.ignite.internal.exchange.time   : Started exchange init [topVer=AffinityTopologyVersion [topVer=1, minorTopVer=2], crd=true, evt=DISCOVERY_CUSTOM_EVT, evtNode=718629f3-1adf-4ac0-b770-ccc34af1a18e, customEvt=DynamicCacheChangeBatch [id=a9c9ab88e61-f4cd807f-0284-46ee-9714-4c1706ce79ab, reqs=[DynamicCacheChangeRequest [cacheName=stock-trade-cache, hasCfg=true, nodeId=718629f3-1adf-4ac0-b770-ccc34af1a18e, clientStartOnly=false, stop=false, destroy=false, disabledAfterStartfalse]], exchangeActions=ExchangeActions [startCaches=[stock-trade-cache], stopCaches=null, startGrps=[stock-trade-cache], stopGrps=[], resetParts=null, stateChangeRequest=null], startCaches=false], allowMerge=false]
+
+----------
+
+[user@host ignite-compute-client]$ $JAVA_HOME/bin/java -jar ignite-compute-client-0.0.1-SNAPSHOT.jar
+
+2019-11-20 17:43:25.172  INFO 179275 --- [           main] poc.ignite.IgniteApp                     : Started IgniteApp in 3.243 seconds (JVM running for 3.685)
+2019-11-20 17:43:25.174  INFO 179275 --- [           main] poc.ignite.IgniteApp                     : run service
+2019-11-20 17:43:25.175 DEBUG 179275 --- [           main] poc.ignite.service.IgniteService         : main service
+2019-11-20 17:43:25.175 DEBUG 179275 --- [           main] poc.ignite.service.ComputeService        : main service
+2019-11-20 17:43:25.175 DEBUG 179275 --- [           main] poc.ignite.service.ComputeService        : start service
+2019-11-20 17:43:25.175 DEBUG 179275 --- [           main] poc.ignite.service.ComputeService        : compute service
+2019-11-20 17:43:25.175 DEBUG 179275 --- [           main] poc.ignite.service.ComputeService        : affinityRunWithService service
+2019-11-20 17:43:25.272  INFO 179275 --- [un-with-service] o.a.i.i.m.d.GridDeploymentLocalStore     : Class locally deployed: class org.apache.ignite.cache.affinity.rendezvous.RendezvousAffinityFunction
+
+----------
+
+0: jdbc:ignite:thin://host:10800> select count(*) from "STS".STOCKTRADE;
++--------------------------------+
+|            COUNT(*)            |
++--------------------------------+
+| 5733                           |
++--------------------------------+
+1 row selected (0.147 seconds)
+0: jdbc:ignite:thin://host:10800> select count(*) from "STS".STOCKTRADE where isin='From compute';
++--------------------------------+
+|            COUNT(*)            |
++--------------------------------+
+| 210                            |
++--------------------------------+
+1 row selected (0.023 seconds)
+0: jdbc:ignite:thin://host:10800>
