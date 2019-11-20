@@ -24,6 +24,30 @@ public class EventsService {
 	@Autowired
 	private IgniteProperties ip;
 
+	private void remoteEventsListener() {
+		log.debug("remoteEventsListener service");
+
+		IgnitePredicate<Event> eventListener = event -> {
+			String message = event.message();
+			String name = event.name();
+			int nNodes = ignite.cluster().nodes().size();
+
+			log.debug("name: " + name);
+			log.debug("message: " + message);
+			log.debug("nNodes: " + nNodes);
+
+			if (nNodes != Integer.valueOf(ip.getOther().get("nNodes")))
+				ignite.atomicLong("isAllUp", 0, false).getAndSet(0);
+			else
+				ignite.atomicLong("isAllUp", 0, false).getAndSet(1);
+
+			return true;
+		};
+
+		ignite.events(ignite.cluster().forServers()).remoteListen(null, eventListener, EventType.EVT_NODE_LEFT,
+				EventType.EVT_NODE_JOINED, EventType.EVT_NODE_FAILED);
+	}
+
 	private void eventsListener() {
 		log.debug("eventsListener service");
 
@@ -85,7 +109,10 @@ public class EventsService {
 	private void start() {
 		log.debug("start service");
 
-		eventsListener();
+		if (Boolean.valueOf(ip.getOther().get("listener")))
+			remoteEventsListener();
+
+		// eventsListener();
 		someProcess();
 	}
 

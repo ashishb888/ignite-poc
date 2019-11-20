@@ -12,6 +12,7 @@ ignite:
   other:
     blankNode: false
     clientMode: false
+    listener: true
     nNodes: 3
   cache:
     backups: 0

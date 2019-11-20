@@ -69,7 +69,7 @@ public class BeansConfig {
 			igniteConfiguration.setIncludeEventTypes();
 			igniteConfiguration.setPublicThreadPoolSize(16);
 			igniteConfiguration.setSystemThreadPoolSize(16);
-			igniteConfiguration.setPeerClassLoadingEnabled(false);
+			igniteConfiguration.setPeerClassLoadingEnabled(true);
 			// igniteConfiguration.setIgniteInstanceName("test";)
 			igniteConfiguration.setClientMode(Boolean.valueOf(ip.getOther().get("clientMode")));
 
