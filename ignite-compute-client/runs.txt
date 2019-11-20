@@ -218,3 +218,78 @@ RUN 3 affinityRunWithService
 +--------------------------------+
 1 row selected (0.023 seconds)
 0: jdbc:ignite:thin://host:10800>
+
+----------==----------
+
+RUN 4 affinityCallWithService
+
+[user@host ignite-compute-server]$ $JAVA_HOME/bin/java -jar ignite-compute-server-0.0.1-SNAPSHOT.jar
+
+2019-11-20 17:47:47.266  INFO 180613 --- [           main] poc.ignite.IgniteApp                     : Started IgniteApp in 3.412 seconds (JVM running for 3.874)
+2019-11-20 17:47:47.267  INFO 180613 --- [           main] poc.ignite.IgniteApp                     : run service
+2019-11-20 17:47:47.267 DEBUG 180613 --- [           main] poc.ignite.service.IgniteService         : main service
+2019-11-20 17:47:47.268 DEBUG 180613 --- [           main] poc.ignite.service.ComputeService        : main service
+2019-11-20 17:47:47.268 DEBUG 180613 --- [           main] poc.ignite.service.ComputeService        : start service
+2019-11-20 17:47:47.268 DEBUG 180613 --- [           main] poc.ignite.service.ComputeService        : init service
+2019-11-20 17:47:47.305 DEBUG 180613 --- [rvc-deploy-#103] p.ignite.service.impl.SampleServiceImpl  : init service
+2019-11-20 17:47:47.305 DEBUG 180613 --- [rvc-deploy-#103] p.ignite.service.impl.SampleServiceImpl  : initCache service
+2019-11-20 17:47:47.324  INFO 180613 --- [nge-worker-#102] o.apache.ignite.internal.exchange.time   : Started exchange init [topVer=AffinityTopologyVersion [topVer=1, minorTopVer=2], crd=true, evt=DISCOVERY_CUSTOM_EVT, evtNode=5eef8c3e-2f09-4de4-bc13-9adcbb31b621, customEvt=DynamicCacheChangeBatch [id=21f3fb88e61-42ce8ea3-fde4-4978-99fa-6128d57c928c, reqs=[DynamicCacheChangeRequest [cacheName=stock-trade-cache, hasCfg=true, nodeId=5eef8c3e-2f09-4de4-bc13-9adcbb31b621, clientStartOnly=false, stop=false, destroy=false, disabledAfterStartfalse]], exchangeActions=ExchangeActions [startCaches=[stock-trade-cache], stopCaches=null, startGrps=[stock-trade-cache], stopGrps=[], resetParts=null, stateChangeRequest=null], startCaches=false], allowMerge=false]
+2019-11-20 17:47:47.373  INFO 180613 --- [nge-worker-#102] o.a.i.i.p.cache.GridCacheProcessor       : Started cache [name=stock-trade-cache, id=-3788382, memoryPolicyName=default, mode=PARTITIONED, atomicity=ATOMIC, backups=0]
+
+----------
+
+[user@host ignite-compute-client]$ $JAVA_HOME/bin/java -jar ignite-compute-client-0.0.1-SNAPSHOT.jar
+
+2019-11-20 17:48:06.335  INFO 180955 --- [           main] poc.ignite.IgniteApp                     : Started IgniteApp in 3.258 seconds (JVM running for 3.726)
+2019-11-20 17:48:06.337  INFO 180955 --- [           main] poc.ignite.IgniteApp                     : run service
+2019-11-20 17:48:06.337 DEBUG 180955 --- [           main] poc.ignite.service.IgniteService         : main service
+2019-11-20 17:48:06.337 DEBUG 180955 --- [           main] poc.ignite.service.ComputeService        : main service
+2019-11-20 17:48:06.337 DEBUG 180955 --- [           main] poc.ignite.service.ComputeService        : start service
+2019-11-20 17:48:06.337 DEBUG 180955 --- [           main] poc.ignite.service.ComputeService        : compute service
+2019-11-20 17:48:06.337 DEBUG 180955 --- [           main] poc.ignite.service.ComputeService        : affinityCallWithService service
+2019-11-20 17:48:06.424  INFO 180955 --- [ll-with-service] o.a.i.i.m.d.GridDeploymentLocalStore     : Class locally deployed: class org.apache.ignite.cache.affinity.rendezvous.RendezvousAffinityFunction
+2019-11-20 17:48:06.427  INFO 180955 --- [ll-with-service] o.a.i.i.m.d.GridDeploymentLocalStore     : Class locally deployed: class poc.ignite.service.ComputeService$ICWithService
+2019-11-20 17:48:06.504 DEBUG 180955 --- [ll-with-service] poc.ignite.service.ComputeService        : entries: 10
+2019-11-20 17:48:06.524 DEBUG 180955 --- [ll-with-service] poc.ignite.service.ComputeService        : entries: 10
+2019-11-20 17:48:06.537 DEBUG 180955 --- [ll-with-service] poc.ignite.service.ComputeService        : entries: 10
+2019-11-20 17:48:07.555 DEBUG 180955 --- [ll-with-service] poc.ignite.service.ComputeService        : entries: 10
+2019-11-20 17:48:07.566 DEBUG 180955 --- [ll-with-service] poc.ignite.service.ComputeService        : entries: 10
+2019-11-20 17:48:07.579 DEBUG 180955 --- [ll-with-service] poc.ignite.service.ComputeService        : entries: 10
+2019-11-20 17:48:08.594 DEBUG 180955 --- [ll-with-service] poc.ignite.service.ComputeService        : entries: 10
+2019-11-20 17:48:08.605 DEBUG 180955 --- [ll-with-service] poc.ignite.service.ComputeService        : entries: 10
+
+----------
+
+0: jdbc:ignite:thin://host:10800> select count(*) from "STS".STOCKTRADE;
++--------------------------------+
+|            COUNT(*)            |
++--------------------------------+
+| 5733                           |
++--------------------------------+
+1 row selected (0.154 seconds)
+0: jdbc:ignite:thin://host:10800> select count(*) from "STS".STOCKTRADE where isin='From compute';
++--------------------------------+
+|            COUNT(*)            |
++--------------------------------+
+| 0                              |
++--------------------------------+
+1 row selected (0.035 seconds)
+0: jdbc:ignite:thin://host:10800> select count(*) from "STS".STOCKTRADE where isin='From compute';
++--------------------------------+
+|            COUNT(*)            |
++--------------------------------+
+| 180                            |
++--------------------------------+
+1 row selected (0.018 seconds)
+0: jdbc:ignite:thin://host:10800> select count(*) from "STS".STOCKTRADE where isin='From compute';
++--------------------------------+
+|            COUNT(*)            |
++--------------------------------+
+| 240                            |
++--------------------------------+
+1 row selected (0.014 seconds)
+0: jdbc:ignite:thin://host:10800>
+
+
+----------==----------
+

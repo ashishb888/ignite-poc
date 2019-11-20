@@ -141,7 +141,8 @@ public class ComputeService {
 
 		// affinityRun();
 		// affinityCall();
-		affinityRunWithService();
+		// affinityRunWithService();
+		affinityCallWithService();
 	}
 
 	static class IR implements IgniteRunnable {
