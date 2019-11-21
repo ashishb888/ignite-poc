@@ -30,7 +30,7 @@ public class EventsService {
 		IgnitePredicate<Event> eventListener = event -> {
 			String message = event.message();
 			String name = event.name();
-			int nNodes = ignite.cluster().nodes().size();
+			int nNodes = ignite.cluster().forServers().nodes().size();
 
 			log.debug("name: " + name);
 			log.debug("message: " + message);
@@ -54,7 +54,8 @@ public class EventsService {
 		IgnitePredicate<Event> eventListener = event -> {
 			String message = event.message();
 			String name = event.name();
-			int nNodes = ignite.cluster().nodes().size();
+			// int nNodes = ignite.cluster().nodes().size();
+			int nNodes = ignite.cluster().forServers().nodes().size();
 
 			log.debug("name: " + name);
 			log.debug("message: " + message);
@@ -114,10 +115,11 @@ public class EventsService {
 	private void start() {
 		log.debug("start service");
 
-		if (Boolean.valueOf(ip.getOther().get("listener")))
-			remoteEventsListener();
+		if (Boolean.valueOf(ip.getOther().get("listener"))) {
+			eventsListener();
+			// remoteEventsListener();
+		}
 
-		// eventsListener();
 		someProcess();
 	}
 
