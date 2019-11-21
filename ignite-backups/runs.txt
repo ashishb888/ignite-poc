@@ -1,0 +1,32 @@
+RUN 1
+
+storageCfg.getDefaultDataRegionConfiguration().setInitialSize(512 * 1024 * 1024);
+storageCfg.getDefaultDataRegionConfiguration().setMaxSize(512 * 1024 * 1024);
+
+[user@host ignite-backups]$ $JAVA_HOME/bin/java -Xms5G -Xmx5G -jar ignite-backups-0.0.1-SNAPSHOT.jar
+
+[12:10:09] Topology snapshot [ver=1, servers=1, clients=0, CPUs=32, offheap=0.5GB, heap=5.0GB]
+[12:10:09]   ^-- Node [id=EC98DB05-5D27-4FF9-B950-FB13EC783436, clusterState=ACTIVE]
+[12:10:09] Data Regions Configured:
+[12:10:09]   ^-- default [initSize=512.0 MiB, maxSize=512.0 MiB, persistenceEnabled=false]
+2019-11-21 12:10:09.883  INFO 76769 --- [           main] o.a.i.i.m.d.GridDiscoveryManager         : Topology snapshot [ver=1, servers=1, clients=0, CPUs=32, offheap=0.5GB, heap=5.0GB]
+2019-11-21 12:10:09.884  INFO 76769 --- [           main] o.a.i.i.m.d.GridDiscoveryManager         :   ^-- Node [id=EC98DB05-5D27-4FF9-B950-FB13EC783436, clusterState=ACTIVE]
+2019-11-21 12:10:09.884  INFO 76769 --- [           main] o.a.i.i.m.d.GridDiscoveryManager         : Data Regions Configured:
+2019-11-21 12:10:09.884  INFO 76769 --- [           main] o.a.i.i.m.d.GridDiscoveryManager         :   ^-- default [initSize=512.0 MiB, maxSize=512.0 MiB, persistenceEnabled=false]
+
+
+storageCfg.getDefaultDataRegionConfiguration().setInitialSize(512 * 1024 * 1024);
+storageCfg.getDefaultDataRegionConfiguration().setMaxSize(512 * 1024 * 1024);
+
+[user@host ignite-backups]$ $JAVA_HOME/bin/java -Xms512M -Xmx512M -jar ignite-backups-0.0.1-SNAPSHOT.jar
+
+[12:20:18] Topology snapshot [ver=1, servers=1, clients=0, CPUs=32, offheap=0.5GB, heap=0.5GB]
+[12:20:18]   ^-- Node [id=9F487CD9-FC88-4D72-8687-00D3A82FC81C, clusterState=ACTIVE]
+[12:20:18] Data Regions Configured:
+[12:20:18]   ^-- default [initSize=512.0 MiB, maxSize=512.0 MiB, persistenceEnabled=false]
+2019-11-21 12:20:18.197  INFO 79633 --- [           main] o.a.i.i.m.d.GridDiscoveryManager         : Topology snapshot [ver=1, servers=1, clients=0, CPUs=32, offheap=0.5GB, heap=0.5GB]
+2019-11-21 12:20:18.197  INFO 79633 --- [           main] o.a.i.i.m.d.GridDiscoveryManager         :   ^-- Node [id=9F487CD9-FC88-4D72-8687-00D3A82FC81C, clusterState=ACTIVE]
+2019-11-21 12:20:18.197  INFO 79633 --- [           main] o.a.i.i.m.d.GridDiscoveryManager         : Data Regions Configured:
+2019-11-21 12:20:18.197  INFO 79633 --- [           main] o.a.i.i.m.d.GridDiscoveryManager         :   ^-- default [initSize=512.0 MiB, maxSize=512.0 MiB, persistenceEnabled=false]
+
+----------==----------

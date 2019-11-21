@@ -44,9 +44,14 @@ public class BeansConfig {
 			// Changing total RAM size to be used by Ignite Node.
 			DataStorageConfiguration storageCfg = new DataStorageConfiguration();
 
-			storageCfg.getDefaultDataRegionConfiguration().setInitialSize(1 * 1024 * 1024 * 1024);
+			// storageCfg.getDefaultDataRegionConfiguration().setInitialSize(1 * 1024 * 1024
+			// * 1024);
 			// Setting the size of the default memory region to *GB to achieve this.
-			storageCfg.getDefaultDataRegionConfiguration().setMaxSize(1 * 1024 * 1024 * 1024);
+			// storageCfg.getDefaultDataRegionConfiguration().setMaxSize(1 * 1024 * 1024 *
+			// 1024);
+
+			storageCfg.getDefaultDataRegionConfiguration().setInitialSize(512 * 1024 * 1024);
+			storageCfg.getDefaultDataRegionConfiguration().setMaxSize(512 * 1024 * 1024);
 
 			igniteConfiguration.setDataStorageConfiguration(storageCfg);
 
