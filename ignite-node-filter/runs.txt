@@ -1,0 +1,43 @@
+RUN 1
+
+FIRST Node
+
+ignite:
+  other:
+    blankNode: true
+    clientMode: false
+    nodeName: FIRST
+  cache:
+    backups: 0
+    
+[hdpusr@hdpdev6 ignite-node-filter]$ $JAVA_HOME/bin/java -jar ignite-node-filter-0.0.1-SNAPSHOT.jar    
+
+----------
+
+SECOND Node
+
+ignite:
+  other:
+    blankNode: true
+    clientMode: false
+    nodeName: SECOND
+  cache:
+    backups: 0
+
+[hdpusr@hdpdev6 ignite-node-filter]$ $JAVA_HOME/bin/java -jar ignite-node-filter-0.0.1-SNAPSHOT.jar
+
+----------
+
+Client Node: It will deploy cache on SECOND Node
+    
+ignite:
+  other:
+    blankNode: false
+    clientMode: true
+    nodeName: SECOND
+  cache:
+    backups: 0        
+
+[hdpusr@hdpdev6 ignite-node-filter]$ $JAVA_HOME/bin/java -jar ignite-node-filter-0.0.1-SNAPSHOT.jar
+
+----------==----------

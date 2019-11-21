@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: ignite-backups
+
+logging:
+  file: /var/tmp/logs/ignite-backups/ignite-backups
+  level:
+    root: INFO
+    poc.ignite: debug
+
+ignite:
+  other:
+    blankNode: false
+    clientMode: false
+    nodeName: FIRST
+  cache:
+    backups: 0
+
+kafka:
+  kafkaConsumer:
+    bootstrap.servers: 'localhost:7092'
+    group.id: 'test-consumers'
+    fetch.min.bytes: 100000
+    session.timeout.ms: 60000
+    auto.offset.reset: 'earliest'
+    key.deserializer: 'org.apache.kafka.common.serialization.StringDeserializer'
+    value.deserializer: 'poc.ignite.common.serialization.StockTradeDeserializer'
+
+  metaData:
+    topic: ksa3 #Topic to consume data
+    poll: 5 #millis
