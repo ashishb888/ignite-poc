@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: ignite-data-node
+
+logging:
+  file: /var/tmp/logs/ignite-data-node/ignite-data-node
+  level:
+    root: INFO
+    poc.ignite: debug
+
+ignite:
+  ips:
+    - 172.17.5.36:42500..42700
+    - 172.17.5.31:42500..42700
+    
+  dataRegion: #MB
+    initial: 512
+    max: 1024
+  
+  other:
+    nodeName: data-node
+  
+  threads:
+    enabled: 1
+    system: 4
+    public: 4
+    queries: 4
+    service: 4
+    striped: 4
+    dataStreamer: 4
+    igfs: 4
+    management: 4
+    peerClass: 2
+    rebalance: 1
+    utilityCache: 4
