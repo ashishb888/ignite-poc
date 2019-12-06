@@ -49,5 +49,5 @@ kafka:
     value.deserializer: 'org.apache.kafka.common.serialization.StringDeserializer'
 
   metaData:
-    topic: ksa1 #Topic to consume data
+    topic: iks1 #Topic to consume data
     poll: 5 #millis

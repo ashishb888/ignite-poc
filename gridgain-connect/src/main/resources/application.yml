@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: gridgain-connect
+
+logging:
+  file: /var/tmp/logs/gridgain-connect/gridgain-connect
+  level:
+    root: INFO
+    poc.ignite: debug
+
+ignite:
+  other:
+    blankNode: false
+    clientMode: false
+    rollingUpdatesEnabled: false
+  cache:
+    backups: 1
+
+kafka:
+  kafkaConsumer:
+    bootstrap.servers: 'localhost:7092'
+    group.id: 'test-consumers'
+    fetch.min.bytes: 100000
+    session.timeout.ms: 60000
+    auto.offset.reset: 'earliest'
+    key.deserializer: 'org.apache.kafka.common.serialization.StringDeserializer'
+    value.deserializer: 'poc.ignite.common.serialization.StockTradeDeserializer'
+
+  metaData:
+    topic: ksa3 #Topic to consume data
+    poll: 5 #millis
