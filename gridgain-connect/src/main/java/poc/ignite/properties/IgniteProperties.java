@@ -1,5 +1,6 @@
 package poc.ignite.properties;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -15,4 +16,5 @@ import lombok.Setter;
 public class IgniteProperties {
 	private Map<String, String> cache;
 	private Map<String, String> other;
+	private List<String> ips;
 }

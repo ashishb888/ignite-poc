@@ -9,6 +9,10 @@ logging:
     poc.ignite: debug
 
 ignite:
+  ips:
+    - 172.17.5.36:42500..42700
+    - 172.17.5.31:42500..42700
+    
   other:
     blankNode: false
     clientMode: false

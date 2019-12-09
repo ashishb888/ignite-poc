@@ -20,6 +20,7 @@ ignite:
   other:
     nodeName: worker-node
     records: 25000
+    clientMode: true
   
   cache:
     backups: 1

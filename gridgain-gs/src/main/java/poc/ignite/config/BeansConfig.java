@@ -109,6 +109,8 @@ public class BeansConfig {
 
 			GridGainConfiguration ggc = new GridGainConfiguration();
 			ggc.setLicenseUrl("");
+			
+			igniteConfiguration.setPluginConfigurations(ggc);
 
 			ignite = Ignition.getOrStart(igniteConfiguration);
 

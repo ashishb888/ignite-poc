@@ -42,7 +42,8 @@ public class BeansConfig {
 			TcpDiscoveryVmIpFinder ipFinder = new TcpDiscoveryVmIpFinder();
 
 			// ipFinder.setAddresses(Arrays.asList("172.17.104.233:42500..42700"));
-			ipFinder.setAddresses(Arrays.asList("localhost:42500..42700"));
+			// ipFinder.setAddresses(Arrays.asList("localhost:42500..42700"));
+			ipFinder.setAddresses(ip.getIps());
 
 			spi.setIpFinder(ipFinder);
 			IgniteConfiguration igniteConfiguration = new IgniteConfiguration();
@@ -87,6 +88,10 @@ public class BeansConfig {
 			igniteConfiguration.setClientMode(Boolean.valueOf(ip.getOther().get("clientMode")));
 
 			ignite = Ignition.getOrStart(igniteConfiguration);
+
+			ignite.cacheNames().forEach(c -> {
+				log.info("c: " + c);
+			});
 
 			ignite.atomicLong("kafkaPartition", 0, true);
 			ignite.atomicLong("startNodes", 0, true);

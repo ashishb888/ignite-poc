@@ -1,0 +1,93 @@
+RUN 1
+
+[hdpusr@hdpdev6 gridgain-enterprise-8.7.6]$ cat config/ignite-server-sink.xml
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+    
+    <bean id="grid.cfg" class="org.apache.ignite.configuration.IgniteConfiguration">
+
+         <property name="clientConnectorConfiguration">
+            <bean class="org.apache.ignite.configuration.ClientConnectorConfiguration">
+                <property name="port" value="10900"/>
+            </bean>
+        </property>
+
+        <property name="peerClassLoadingEnabled" value="true"/>
+
+	    <property name="communicationSpi">
+	        <bean class="org.apache.ignite.spi.communication.tcp.TcpCommunicationSpi">
+	            <property name="localPort" value="42100"/>
+	        </bean>
+	    </property>
+
+        <property name="discoverySpi">
+            <bean class="org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi">
+            <property name="localPort" value="42500"/>
+            <property name="localPortRange" value="20"/>
+
+                <property name="ipFinder">
+                    <bean class="org.apache.ignite.spi.discovery.tcp.ipfinder.vm.TcpDiscoveryVmIpFinder">
+                        <property name="addresses">
+                            <list>
+                                <value>localhost:42500..42520</value>
+                            </list>
+                        </property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+
+    </bean>
+</beans>
+[hdpusr@hdpdev6 gridgain-enterprise-8.7.6]$
+[hdpusr@hdpdev6 gridgain-enterprise-8.7.6]$ ./bin/ignite.sh config/ignite-server-sink.xml
+
+
+[hdpusr@hdpdev6 kafka_2.12-2.3.0]$ cat config/gg-source-connect-standalone.properties
+bootstrap.servers=localhost:7092
+key.converter=org.apache.kafka.connect.json.JsonConverter
+value.converter=org.apache.kafka.connect.json.JsonConverter
+key.converter.schemas.enable=true
+value.converter.schemas.enable=true
+offset.storage.file.filename=/tmp/connect.offsets
+offset.flush.interval.ms=10000
+plugin.path=/opt/ngs/ashishb/packages/kafka_2.12-2.3.0/plugins/gridgain-kafka-connect
+rest.port=8084
+
+
+[hdpusr@hdpdev6 kafka_2.12-2.3.0]$ cat  config/connect-gg-sink.properties
+name=gridgain-quickstart-sink6
+topics=gg-SQL_PUBLIC_PERSON
+tasks.max=1
+connector.class=org.gridgain.kafka.sink.IgniteSinkConnector
+igniteCfg=/opt/ngs/ashishb/packages/gridgain-enterprise-8.7.6/config/ignite-server-sink.xml
+topicPrefix=gg-
+
+[hdpusr@hdpdev6 kafka_2.12-2.3.0]$
+
+ignite:
+  other:
+    blankNode: false
+    clientMode: true
+    rollingUpdatesEnabled: false
+
+[hdpusr@hdpdev6 gridgain-connect]$ $JAVA_HOME/bin/java -Xms1G -Xmx1G  -jar gridgain-connect-0.0.1-SNAPSHOT.jar
+
+
+2019-12-05 18:49:24.751  INFO 155640 --- [ange-worker-#98] o.a.i.i.p.cache.GridCacheProcessor       : Started cache [name=SQL_PUBLIC_PERSON, id=-1447683814, dataRegionName=default, mode=PARTITIONED, atomicity=ATOMIC, backups=0, mvcc=false]
+2019-12-05 18:49:24.763  INFO 155640 --- [ange-worker-#98] o.a.i.i.p.cache.GridCacheProcessor       : Finish proxy initialization, cacheName=SQL_PUBLIC_PERSON, localNodeId=a27ebaa7-f7e5-4567-b6b4-8b7d5004e83c
+2019-12-05 18:49:24.780  INFO 155640 --- [           main] poc.ignite.service.ConnectService        : k: 1,v: SQL_PUBLIC_PERSON_9af4b0f8_1335_4e0d_931f_19fb389e119e [idHash=471579726, hash=1543922759, CITY_ID=3, NAME=John Doe]
+2019-12-05 18:49:24.781  INFO 155640 --- [           main] poc.ignite.service.ConnectService        : k: 2,v: SQL_PUBLIC_PERSON_9af4b0f8_1335_4e0d_931f_19fb389e119e [idHash=1442726378, hash=104265935, CITY_ID=4, NAME=John Smith]
+2019-12-05 18:49:24.781  INFO 155640 --- [           main] poc.ignite.service.ConnectService        : k: 4,v: SQL_PUBLIC_PERSON_ef2e69de_575e_41e8_9c65_786ceb5267c0 [idHash=16503286, hash=295388508, CITY_ID=5, NAME=Ashish Bhosle]
+2019-12-05 18:49:24.782  INFO 155640 --- [           main] poc.ignite.service.ConnectService        : k: 6,v: SQL_PUBLIC_PERSON_d9017bf3_a78b_4f08_9649_e0a7fffcf28d [idHash=484589713, hash=950833226, CITY_ID=4, NAME=AB]
+2019-12-05 18:49:24.782  INFO 155640 --- [           main] poc.ignite.service.ConnectService        : k: 7,v: SQL_PUBLIC_PERSON_d9017bf3_a78b_4f08_9649_e0a7fffcf28d [idHash=1574598287, hash=950833226, CITY_ID=4, NAME=AB]
+2019-12-05 18:49:24.782  INFO 155640 --- [           main] poc.ignite.service.ConnectService        : k: 8,v: SQL_PUBLIC_PERSON_d9017bf3_a78b_4f08_9649_e0a7fffcf28d [idHash=2056031695, hash=950833226, CITY_ID=4, NAME=AB]
+2019-12-05 18:49:24.782  INFO 155640 --- [           main] poc.ignite.service.ConnectService        : k: 9,v: SQL_PUBLIC_PERSON_d9017bf3_a78b_4f08_9649_e0a7fffcf28d [idHash=606508809, hash=950833226, CITY_ID=4, NAME=AB]
+2019-12-05 18:49:24.782  INFO 155640 --- [           main] poc.ignite.service.ConnectService        : k: 10,v: SQL_PUBLIC_PERSON_6e93302a_d369_4c93_906c_55e5b25ec40c [idHash=718187988, hash=950833226, CITY_ID=4, NAME=AB]
+
+----------==----------
