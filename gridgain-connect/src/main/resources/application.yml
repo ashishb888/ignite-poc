@@ -17,6 +17,7 @@ ignite:
     blankNode: false
     clientMode: false
     rollingUpdatesEnabled: false
+    cacheName: 'kcisl4'
   cache:
     backups: 1
 

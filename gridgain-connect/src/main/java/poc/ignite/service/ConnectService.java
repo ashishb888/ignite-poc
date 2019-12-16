@@ -1,5 +1,6 @@
 package poc.ignite.service;
 
+import java.util.Arrays;
 import java.util.Properties;
 
 import javax.cache.CacheException;
@@ -37,8 +38,11 @@ public class ConnectService {
 //					log.info("k: " + r.getKey() + ",v: " + r.getValue());
 //				});
 
-				ignite.cache("SQL_PUBLIC_PERSON").withKeepBinary().forEach(r -> {
+				ignite.cache(ip.getOther().get("cacheName")).withKeepBinary().forEach(r -> {
 					log.info("k: " + r.getKey() + ",v: " + r.getValue());
+					log.info("k: " + Arrays.toString((byte[]) r.getKey()) + ",v: "
+							+ Arrays.toString((byte[]) r.getValue()));
+
 				});
 			} catch (CacheException e) {
 				log.error(e.getMessage(), e);
