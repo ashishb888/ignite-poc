@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: ignite-service-canceller
+
+logging:
+  file: /var/tmp/logs/ignite-service-canceller/ignite-service-canceller
+  level:
+    root: INFO
+    poc.ignite: debug
+
+ignite:
+  ips:
+    - 172.17.5.36:42500..42700
+    - 172.17.5.31:42500..42700
+  
+  tcpDiscoverySpi:
+    localPort: 42500
+  
+  other:
+    clientMode: true
+    rollingUpdatesEnabled: true
+    
