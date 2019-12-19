@@ -14,5 +14,6 @@ ignite:
     clientMode: false
     listener: true
     nNodes: 3
+    nodeName: data-node
   cache:
     backups: 0

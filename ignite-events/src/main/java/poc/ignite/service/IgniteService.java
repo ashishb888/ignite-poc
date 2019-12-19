@@ -25,10 +25,13 @@ public class IgniteService {
 
 	@Autowired
 	private EventsService es;
+	@Autowired
+	private NodeEventsService nes;
 
 	public void main() {
 		log.debug("main service");
 
-		es.main();
+		// es.main();
+		nes.main();
 	}
 }
