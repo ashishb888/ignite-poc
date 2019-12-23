@@ -11,16 +11,18 @@ logging:
 ignite:
   ips:
     - 172.17.5.36:42500..42700
-    - 172.17.5.31:42500..42700
+    #- 172.17.5.31:42500..42700
   
   tcpDiscoverySpi:
     localPort: 42500
   
   dataRegion:
-    initial: 512 * 1024 * 1024
-    max: 512 * 1024 * 1024
+    initial: 268435456 # 256 * 1024 * 1024
+    max: 268435456 # 256 * 1024 * 1024
     persistence: true
+    active: true
       
   other:
-    clientMode: true
+    clientMode: false
+    records: 500
     

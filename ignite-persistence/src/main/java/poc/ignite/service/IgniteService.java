@@ -22,15 +22,11 @@ import lombok.extern.slf4j.Slf4j;
 public class IgniteService {
 
 	@Autowired
-	private Ignite ignite;
-
-	private void start() {
-		log.debug("start service");
-	}
+	private SimplePersistenceService sps;
 
 	public void main() {
 		log.debug("main service");
 
-		start();
+		sps.main();
 	}
 }

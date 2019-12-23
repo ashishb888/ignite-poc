@@ -72,6 +72,7 @@ public class BeansConfig {
 			igniteConfiguration.setClientMode(Boolean.valueOf(ip.getOther().get("clientMode")));
 
 			ignite = Ignition.getOrStart(igniteConfiguration);
+			ignite.cluster().active(Boolean.valueOf(ip.getDataRegion().get("active")));
 		} catch (IgniteException e) {
 			log.error("Exception", e);
 		}
