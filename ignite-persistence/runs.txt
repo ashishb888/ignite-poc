@@ -45,3 +45,27 @@ Other nodes:
 Number of other nodes: 1
 [user@host apache-ignite-fabric-2.6.0-bin]$
 [user@host apache-ignite-fabric-2.6.0-bin]$
+
+----------==----------
+RUN 3
+
+[user@host ignite-persistence-data-node]$ $JAVA_HOME/bin/java -Xms1G -Xmx1G -Dlogging.file=/var/tmp/logs/ignite-persistence-data-node/ignite-persistence-data-node1 -jar ignite-persistence-data-node-0.0.1-SNAPSHOT.jar
+[user@host ignite-persistence-data-node]$ $JAVA_HOME/bin/java -Xms1G -Xmx1G -Dlogging.file=/var/tmp/logs/ignite-persistence-data-node/ignite-persistence-data-node2 -jar ignite-persistence-data-node-0.0.1-SNAPSHOT.jar
+[user@host ignite-persistence]$ $JAVA_HOME/bin/java -Xms1G -Xmx1G  -jar ignite-persistence-0.0.1-SNAPSHOT.jar
+
+[user@host apache-ignite-fabric-2.6.0-bin]$ ./bin/control.sh --baseline
+Control utility [ver. 2.6.0#20180710-sha1:669feacc]
+2018 Copyright(C) Apache Software Foundation
+User: hdpusr
+--------------------------------------------------------------------------------
+Cluster state: active
+Current topology version: 3
+
+Baseline nodes:
+    ConsistentID=b72461e5-5076-42aa-8444-95e385a806b4, STATE=ONLINE
+    ConsistentID=cc76676c-4eb8-450d-8853-4faeb9acf671, STATE=ONLINE
+--------------------------------------------------------------------------------
+Number of baseline nodes: 2
+
+Other nodes not found.
+[user@host apache-ignite-fabric-2.6.0-bin]$

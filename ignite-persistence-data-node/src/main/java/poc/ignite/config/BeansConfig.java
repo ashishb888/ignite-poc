@@ -66,7 +66,7 @@ public class BeansConfig {
 
 			ignite = Ignition.getOrStart(igniteConfiguration);
 
-			ignite.cluster().active(true);
+			// ignite.cluster().active(true);
 			ignite.atomicLong("nodes", 0L, true).getAndIncrement();
 		} catch (IgniteException e) {
 			log.error("Exception", e);

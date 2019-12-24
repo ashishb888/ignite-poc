@@ -3,6 +3,7 @@ spring:
     name: ignite-persistence-data-node
 
 logging:
+  file: /var/tmp/logs/ignite-persistence-data-node/ignite-persistence-data-node
   level:
     root: INFO
     poc.ignite: debug
