@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import lombok.extern.slf4j.Slf4j;
 import poc.ignite.domain.Person;
+import poc.ignite.filters.DataNodeFilter;
 
 @Slf4j
 @Repository
@@ -24,6 +25,7 @@ public class CacheRepository {
 		personCacheConfig.setIndexedTypes(Integer.class, Person.class);
 		personCacheConfig.setCacheMode(CacheMode.PARTITIONED);
 		personCacheConfig.setSqlSchema("sts");
+		personCacheConfig.setNodeFilter(new DataNodeFilter());
 
 		ignite.addCacheConfiguration(personCacheConfig);
 

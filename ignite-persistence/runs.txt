@@ -24,3 +24,24 @@ sqlline version 1.3.0
 +--------------------------------+
 
 ----------==----------
+
+RUN 2
+
+[user@host apache-ignite-fabric-2.6.0-bin]$ bin/control.sh --baseline
+Control utility [ver. 2.6.0#20180710-sha1:669feacc]
+2018 Copyright(C) Apache Software Foundation
+User: hdpusr
+--------------------------------------------------------------------------------
+Cluster state: active
+Current topology version: 7
+
+Baseline nodes:
+    ConsistentID=2dc61561-1e46-48cf-a036-06d9f0467438, STATE=ONLINE
+--------------------------------------------------------------------------------
+Number of baseline nodes: 1
+
+Other nodes:
+    ConsistentID=e465d475-8ce6-47a2-8b33-0dedf5a0e526
+Number of other nodes: 1
+[user@host apache-ignite-fabric-2.6.0-bin]$
+[user@host apache-ignite-fabric-2.6.0-bin]$

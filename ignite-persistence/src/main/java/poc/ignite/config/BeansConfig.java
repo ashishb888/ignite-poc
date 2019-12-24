@@ -49,17 +49,15 @@ public class BeansConfig {
 			storageCfg.getDefaultDataRegionConfiguration()
 					.setPersistenceEnabled(Boolean.valueOf(ip.getDataRegion().get("persistence")));
 
-			igniteConfiguration.setDataStorageConfiguration(storageCfg);
-			igniteConfiguration.setFailureDetectionTimeout(90000);
-
 			TcpCommunicationSpi commSpi = new TcpCommunicationSpi();
-			commSpi.setLocalPort(42100);
-
+			commSpi.setLocalPort(ip.getTcpCommunicationSpi().get("localPort"));
 			commSpi.setMessageQueueLimit(1024);
 			commSpi.setSocketWriteTimeout(10000L);
 
+			igniteConfiguration.setDiscoverySpi(spi);
 			igniteConfiguration.setCommunicationSpi(commSpi);
-
+			igniteConfiguration.setDataStorageConfiguration(storageCfg);
+			igniteConfiguration.setFailureDetectionTimeout(90000);
 			// All properties should be in YAML
 			igniteConfiguration.setDiscoverySpi(spi);
 			igniteConfiguration.setIncludeEventTypes();
@@ -72,7 +70,6 @@ public class BeansConfig {
 			igniteConfiguration.setClientMode(Boolean.valueOf(ip.getOther().get("clientMode")));
 
 			ignite = Ignition.getOrStart(igniteConfiguration);
-			ignite.cluster().active(Boolean.valueOf(ip.getDataRegion().get("active")));
 		} catch (IgniteException e) {
 			log.error("Exception", e);
 		}

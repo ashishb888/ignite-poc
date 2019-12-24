@@ -16,13 +16,17 @@ ignite:
   tcpDiscoverySpi:
     localPort: 42500
   
+  tcpCommunicationSpi:
+    localPort: 42100  
+  
   dataRegion:
     initial: 268435456 # 256 * 1024 * 1024
     max: 268435456 # 256 * 1024 * 1024
-    persistence: true
+    persistence: false
     active: true
       
   other:
     clientMode: false
     records: 500
+    nodes: 2
     

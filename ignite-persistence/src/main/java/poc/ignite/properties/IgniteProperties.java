@@ -15,6 +15,7 @@ import lombok.Setter;
 @Getter
 public class IgniteProperties {
 	private Map<String, Integer> tcpDiscoverySpi;
+	private Map<String, Integer> tcpCommunicationSpi;
 	private Map<String, String> other;
 	private List<String> ips;
 	private Map<String, String> dataRegion;
