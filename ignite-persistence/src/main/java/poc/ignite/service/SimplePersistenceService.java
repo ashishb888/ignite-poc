@@ -34,7 +34,7 @@ public class SimplePersistenceService {
 	private void start() {
 		log.debug("start service");
 
-		IgniteCache<Integer, Person> personCache1 = cr.personCache("person-cache1", "sts1", null);
+		IgniteCache<Integer, Person> personCache1 = cr.personCache("person-cache1", "sts1", "Default_Region");
 		int records = Integer.valueOf(ip.getOther().get("records"));
 
 		try (IgniteDataStreamer<Integer, Person> streamer = ignite.dataStreamer(personCache1.getName())) {
