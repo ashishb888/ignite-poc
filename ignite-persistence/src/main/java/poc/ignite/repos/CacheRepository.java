@@ -17,17 +17,22 @@ public class CacheRepository {
 	@Autowired
 	private Ignite ignite;
 
-	public IgniteCache<Integer, Person> personCache() {
+	public IgniteCache<Integer, Person> personCache(String cacheName, String schema, String regionName) {
 		log.debug("personCache repo");
 
-		final String cacheName = "person-cache";
 		CacheConfiguration<Integer, Person> personCacheConfig = new CacheConfiguration<>(cacheName);
 		personCacheConfig.setIndexedTypes(Integer.class, Person.class);
 		personCacheConfig.setCacheMode(CacheMode.PARTITIONED);
-		personCacheConfig.setSqlSchema("sts");
+		personCacheConfig.setSqlSchema(schema);
 		personCacheConfig.setNodeFilter(new DataNodeFilter());
 
-		ignite.addCacheConfiguration(personCacheConfig);
+		// if (regionName != null)
+		personCacheConfig.setDataRegionName(regionName);
+
+		log.debug("getCacheConfiguration: " + ignite.configuration().getCacheConfiguration());
+
+		ignite.configuration().setCacheConfiguration(personCacheConfig);
+		// ignite.addCacheConfiguration(personCacheConfig);
 
 		return ignite.getOrCreateCache(cacheName);
 	}

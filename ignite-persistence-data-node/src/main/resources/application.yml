@@ -22,8 +22,16 @@ ignite:
   dataRegion:
     initial: 268435456 # 256 * 1024 * 1024
     max: 268435456 # 256 * 1024 * 1024
+    name: Data_Region
     persistence: true
     active: true
+    
+  defaultRegion:
+    initial: 268435456 # 256 * 1024 * 1024
+    max: 268435456 # 256 * 1024 * 1024
+    name: Default_Region
+    persistence: false
+    active: false    
   
   other:
     nodeName: data-node

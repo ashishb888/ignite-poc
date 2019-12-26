@@ -5,6 +5,7 @@ import java.util.Collections;
 import org.apache.ignite.Ignite;
 import org.apache.ignite.IgniteException;
 import org.apache.ignite.Ignition;
+import org.apache.ignite.configuration.DataRegionConfiguration;
 import org.apache.ignite.configuration.DataStorageConfiguration;
 import org.apache.ignite.configuration.IgniteConfiguration;
 import org.apache.ignite.logger.slf4j.Slf4jLogger;
@@ -44,12 +45,19 @@ public class BeansConfig {
 
 			// Changing total RAM size to be used by Ignite Node.
 			DataStorageConfiguration storageCfg = new DataStorageConfiguration();
-			storageCfg.getDefaultDataRegionConfiguration()
-					.setInitialSize(Long.valueOf(ip.getDataRegion().get("initial")));
-			storageCfg.getDefaultDataRegionConfiguration().setMaxSize(Long.valueOf(ip.getDataRegion().get("max")));
-			storageCfg.getDefaultDataRegionConfiguration()
-					.setPersistenceEnabled(Boolean.valueOf(ip.getDataRegion().get("persistence")));
-			
+			DataRegionConfiguration defaultRegion = new DataRegionConfiguration();
+			defaultRegion.setName(ip.getDefaultRegion().get("name"));
+			defaultRegion.setInitialSize(Long.valueOf(ip.getDefaultRegion().get("initial")));
+			defaultRegion.setMaxSize(Long.valueOf(ip.getDefaultRegion().get("max")));
+			storageCfg.setDefaultDataRegionConfiguration(defaultRegion);
+
+			DataRegionConfiguration dataRegion = new DataRegionConfiguration();
+			dataRegion.setName(ip.getDataRegion().get("name"));
+			dataRegion.setInitialSize(Long.valueOf(ip.getDataRegion().get("initial")));
+			dataRegion.setMaxSize(Long.valueOf(ip.getDataRegion().get("max")));
+			dataRegion.setPersistenceEnabled(Boolean.valueOf(ip.getDataRegion().get("persistence")));
+			storageCfg.setDataRegionConfigurations(dataRegion);
+
 			TcpCommunicationSpi commSpi = new TcpCommunicationSpi();
 			commSpi.setLocalPort(ip.getTcpCommunicationSpi().get("localPort"));
 			commSpi.setMessageQueueLimit(1024);
@@ -61,13 +69,12 @@ public class BeansConfig {
 			igniteConfiguration.setFailureDetectionTimeout(90000);
 			igniteConfiguration.setPeerClassLoadingEnabled(true);
 			igniteConfiguration.setGridLogger(new Slf4jLogger());
-			igniteConfiguration.setClientMode(Boolean.valueOf(ip.getOther().get("clientMode")));
 			igniteConfiguration.setUserAttributes(Collections.singletonMap("nodeName", ip.getOther().get("nodeName")));
 
 			ignite = Ignition.getOrStart(igniteConfiguration);
 
 			// ignite.cluster().active(true);
-			ignite.atomicLong("nodes", 0L, true).getAndIncrement();
+			// ignite.atomicLong("nodes", 0L, true).getAndIncrement();
 		} catch (IgniteException e) {
 			log.error("Exception", e);
 		}

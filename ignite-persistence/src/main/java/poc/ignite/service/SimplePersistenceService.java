@@ -34,10 +34,20 @@ public class SimplePersistenceService {
 	private void start() {
 		log.debug("start service");
 
-		IgniteCache<Integer, Person> personCache = cr.personCache();
+		IgniteCache<Integer, Person> personCache1 = cr.personCache("person-cache1", "sts1", null);
 		int records = Integer.valueOf(ip.getOther().get("records"));
 
-		try (IgniteDataStreamer<Integer, Person> streamer = ignite.dataStreamer(personCache.getName())) {
+		try (IgniteDataStreamer<Integer, Person> streamer = ignite.dataStreamer(personCache1.getName())) {
+			for (int i = 0; i < records; i++) {
+				streamer.addData(i, new Person(i, i, "p" + i));
+			}
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+
+		IgniteCache<Integer, Person> personCache2 = cr.personCache("person-cache2", "sts2", "Data_Region");
+
+		try (IgniteDataStreamer<Integer, Person> streamer = ignite.dataStreamer(personCache2.getName())) {
 			for (int i = 0; i < records; i++) {
 				streamer.addData(i, new Person(i, i, "p" + i));
 			}
@@ -83,7 +93,15 @@ public class SimplePersistenceService {
 	private void init() {
 		log.debug("init service");
 
-		eventsListener();
+		// eventsListener();
+
+		boolean clusterActive = ignite.cluster().active();
+		log.debug("clusterActive: " + clusterActive);
+
+		ignite.cluster().active(Boolean.valueOf(ip.getDataRegion().get("active")));
+
+		Collection<ClusterNode> dataNodes = ignite.cluster().forAttribute("nodeName", "data-node").nodes();
+		ignite.cluster().setBaselineTopology(dataNodes);
 	}
 
 	public void main() {

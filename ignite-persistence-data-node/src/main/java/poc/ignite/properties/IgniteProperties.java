@@ -19,4 +19,5 @@ public class IgniteProperties {
 	private Map<String, String> other;
 	private List<String> ips;
 	private Map<String, String> dataRegion;
+	private Map<String, String> defaultRegion;
 }
