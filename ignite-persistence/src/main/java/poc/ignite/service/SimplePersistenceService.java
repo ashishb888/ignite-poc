@@ -91,8 +91,10 @@ public class SimplePersistenceService {
 
 		init();
 
-		if (baseTopology.get()) {
-			start();
-		}
+//		if (baseTopology.get()) {
+//			start();
+//		}
+
+		start();
 	}
 }
