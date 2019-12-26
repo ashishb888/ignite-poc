@@ -30,7 +30,7 @@ RUN 2
 [user@host apache-ignite-fabric-2.6.0-bin]$ bin/control.sh --baseline
 Control utility [ver. 2.6.0#20180710-sha1:669feacc]
 2018 Copyright(C) Apache Software Foundation
-User: hdpusr
+User: user
 --------------------------------------------------------------------------------
 Cluster state: active
 Current topology version: 7
@@ -56,7 +56,7 @@ RUN 3
 [user@host apache-ignite-fabric-2.6.0-bin]$ ./bin/control.sh --baseline
 Control utility [ver. 2.6.0#20180710-sha1:669feacc]
 2018 Copyright(C) Apache Software Foundation
-User: hdpusr
+User: user
 --------------------------------------------------------------------------------
 Cluster state: active
 Current topology version: 3
@@ -69,3 +69,43 @@ Number of baseline nodes: 2
 
 Other nodes not found.
 [user@host apache-ignite-fabric-2.6.0-bin]$
+
+
+----------==----------
+RUN 4
+
+[user@host apache-ignite-fabric-2.6.0-bin]$ ./bin/control.sh --baseline
+Control utility [ver. 2.6.0#20180710-sha1:669feacc]
+2018 Copyright(C) Apache Software Foundation
+User: user
+--------------------------------------------------------------------------------
+Cluster state: active
+Current topology version: 10
+
+Baseline nodes:
+    ConsistentID=b72461e5-5076-42aa-8444-95e385a806b4, STATE=ONLINE
+    ConsistentID=cc76676c-4eb8-450d-8853-4faeb9acf671, STATE=ONLINE
+--------------------------------------------------------------------------------
+Number of baseline nodes: 2
+
+Other nodes not found.
+
+----------After killing a node----------
+
+[user@host apache-ignite-fabric-2.6.0-bin]$ ./bin/control.sh --baseline
+Control utility [ver. 2.6.0#20180710-sha1:669feacc]
+2018 Copyright(C) Apache Software Foundation
+User: user
+--------------------------------------------------------------------------------
+Cluster state: active
+Current topology version: 11
+
+Baseline nodes:
+    ConsistentID=b72461e5-5076-42aa-8444-95e385a806b4, STATE=ONLINE
+    ConsistentID=cc76676c-4eb8-450d-8853-4faeb9acf671, STATE=OFFLINE
+--------------------------------------------------------------------------------
+Number of baseline nodes: 2
+
+Other nodes not found.
+[user@host apache-ignite-fabric-2.6.0-bin]$
+
