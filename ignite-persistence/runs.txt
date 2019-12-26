@@ -109,3 +109,97 @@ Number of baseline nodes: 2
 Other nodes not found.
 [user@host apache-ignite-fabric-2.6.0-bin]$
 
+----------==----------
+RUN 5
+
+[user@host apache-ignite-fabric-2.6.0-bin]$ ./bin/control.sh  --activate
+Control utility [ver. 2.6.0#20180710-sha1:669feacc]
+2018 Copyright(C) Apache Software Foundation
+User: user
+--------------------------------------------------------------------------------
+Cluster activated
+[user@host apache-ignite-fabric-2.6.0-bin]$ ./bin/control.sh --baseline
+Control utility [ver. 2.6.0#20180710-sha1:669feacc]
+2018 Copyright(C) Apache Software Foundation
+User: user
+--------------------------------------------------------------------------------
+Cluster state: active
+Current topology version: 4
+
+Baseline nodes:
+    ConsistentID=2ecd6f67-c7e6-49bf-86de-efbe407f6496, STATE=ONLINE
+    ConsistentID=b8067f87-201f-4083-bd87-ec817801884c, STATE=ONLINE
+--------------------------------------------------------------------------------
+Number of baseline nodes: 2
+
+Other nodes not found.
+[user@host apache-ignite-fabric-2.6.0-bin]$
+
+[user@host apache-ignite-fabric-2.6.0-bin]$ ./bin/control.sh --state
+Control utility [ver. 2.6.0#20180710-sha1:669feacc]
+2018 Copyright(C) Apache Software Foundation
+User: user
+--------------------------------------------------------------------------------
+Cluster is active
+[user@host apache-ignite-fabric-2.6.0-bin]$
+
+
+[user@host apache-ignite-fabric-2.6.0-bin]$ $IGNITE_HOME/bin/sqlline.sh --verbose=true -u jdbc:ignite:thin://host
+issuing: !connect jdbc:ignite:thin://host '' '' org.apache.ignite.IgniteJdbcThinDriver
+Connecting to jdbc:ignite:thin://host
+Connected to: Apache Ignite (version 2.6.0#20180710-sha1:669feacc)
+Driver: Apache Ignite Thin JDBC Driver (version 2.6.0#20180710-sha1:669feacc)
+Autocommit status: true
+Transaction isolation: TRANSACTION_REPEATABLE_READ
+sqlline version 1.3.0
+0: jdbc:ignite:thin://host> !tables
++--------------------------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------+------------------------------+
+|           TABLE_CAT            |          TABLE_SCHEM           |           TABLE_NAME           |           TABLE_TYPE           |            REMARKS             |            TYPE_CAT          |
++--------------------------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------+------------------------------+
+|                                | STS                            | PERSON                         | TABLE                          |                                |                              |
++--------------------------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------+------------------------------+
+0: jdbc:ignite:thin://host> select count(*) from "STS".PERSON;
++--------------------------------+
+|            COUNT(*)            |
++--------------------------------+
+| 10                             |
++--------------------------------+
+1 row selected (0.156 seconds)
+0: jdbc:ignite:thin://host> select * from "STS".PERSON;
++--------------------------------+--------------------------------+--------------------------------+
+|               ID               |             CITYID             |              NAME              |
++--------------------------------+--------------------------------+--------------------------------+
+| 1                              | 1                              | p1                             |
+| 2                              | 2                              | p2                             |
+| 7                              | 7                              | p7                             |
+| 8                              | 8                              | p8                             |
+| 0                              | 0                              | p0                             |
+| 3                              | 3                              | p3                             |
+| 4                              | 4                              | p4                             |
+| 5                              | 5                              | p5                             |
+| 6                              | 6                              | p6                             |
+| 9                              | 9                              | p9                             |
++--------------------------------+--------------------------------+--------------------------------+
+10 rows selected (0.029 seconds)
+0: jdbc:ignite:thin://host>
+
+----------After killing a node----------
+
+0: jdbc:ignite:thin://host> select * from "STS".PERSON;
++--------------------------------+--------------------------------+--------------------------------+
+|               ID               |             CITYID             |              NAME              |
++--------------------------------+--------------------------------+--------------------------------+
+| 1                              | 1                              | p1                             |
+| 2                              | 2                              | p2                             |
+| 7                              | 7                              | p7                             |
+| 8                              | 8                              | p8                             |
++--------------------------------+--------------------------------+--------------------------------+
+4 rows selected (0.014 seconds)
+0: jdbc:ignite:thin://host> select count(*) from "STS".PERSON;
++--------------------------------+
+|            COUNT(*)            |
++--------------------------------+
+| 4                              |
++--------------------------------+
+1 row selected (0.005 seconds)
+0: jdbc:ignite:thin://host>
