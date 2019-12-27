@@ -117,6 +117,7 @@ public class SimplePersistenceService {
 //			start();
 //		}
 
-		start();
+		if (Boolean.valueOf(ip.getOther().get("start")))
+			start();
 	}
 }

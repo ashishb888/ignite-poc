@@ -37,4 +37,5 @@ ignite:
     clientMode: true
     records: 500
     nodes: 2
+    start: false
     
