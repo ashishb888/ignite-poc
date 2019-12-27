@@ -31,8 +31,8 @@ public class CacheRepository {
 
 		log.debug("getCacheConfiguration: " + ignite.configuration().getCacheConfiguration());
 
-		ignite.configuration().setCacheConfiguration(personCacheConfig);
-		// ignite.addCacheConfiguration(personCacheConfig);
+		// ignite.configuration().setCacheConfiguration(personCacheConfig);
+		ignite.addCacheConfiguration(personCacheConfig);
 
 		return ignite.getOrCreateCache(cacheName);
 	}

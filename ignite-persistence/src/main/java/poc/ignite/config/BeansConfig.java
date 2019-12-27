@@ -42,13 +42,13 @@ public class BeansConfig {
 			IgniteConfiguration igniteConfiguration = new IgniteConfiguration();
 
 			// Changing total RAM size to be used by Ignite Node.
-			DataStorageConfiguration storageCfg = new DataStorageConfiguration();
-			storageCfg.getDefaultDataRegionConfiguration()
-					.setInitialSize(Long.valueOf(ip.getDataRegion().get("initial")));
-			storageCfg.getDefaultDataRegionConfiguration().setMaxSize(Long.valueOf(ip.getDataRegion().get("max")));
-			storageCfg.getDefaultDataRegionConfiguration()
-					.setPersistenceEnabled(Boolean.valueOf(ip.getDataRegion().get("persistence")));
-
+//			DataStorageConfiguration storageCfg = new DataStorageConfiguration();
+//			storageCfg.getDefaultDataRegionConfiguration()
+//					.setInitialSize(Long.valueOf(ip.getDataRegion().get("initial")));
+//			storageCfg.getDefaultDataRegionConfiguration().setMaxSize(Long.valueOf(ip.getDataRegion().get("max")));
+//			storageCfg.getDefaultDataRegionConfiguration()
+//					.setPersistenceEnabled(Boolean.valueOf(ip.getDataRegion().get("persistence")));
+//			igniteConfiguration.setDataStorageConfiguration(storageCfg);
 			TcpCommunicationSpi commSpi = new TcpCommunicationSpi();
 			commSpi.setLocalPort(ip.getTcpCommunicationSpi().get("localPort"));
 			commSpi.setMessageQueueLimit(1024);
@@ -56,7 +56,7 @@ public class BeansConfig {
 
 			igniteConfiguration.setDiscoverySpi(spi);
 			igniteConfiguration.setCommunicationSpi(commSpi);
-			igniteConfiguration.setDataStorageConfiguration(storageCfg);
+
 			igniteConfiguration.setFailureDetectionTimeout(90000);
 			// All properties should be in YAML
 			igniteConfiguration.setDiscoverySpi(spi);

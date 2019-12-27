@@ -34,6 +34,8 @@ public class SimplePersistenceService {
 	private void start() {
 		log.debug("start service");
 
+		// IgniteCache<Integer, Person> personCache1 = cr.personCache("person-cache1",
+		// "sts1", "Default_Region");
 		IgniteCache<Integer, Person> personCache1 = cr.personCache("person-cache1", "sts1", "Default_Region");
 		int records = Integer.valueOf(ip.getOther().get("records"));
 
@@ -45,6 +47,8 @@ public class SimplePersistenceService {
 			log.error(e.getMessage(), e);
 		}
 
+		// IgniteCache<Integer, Person> personCache2 = cr.personCache("person-cache2",
+		// "sts2", "Data_Region");
 		IgniteCache<Integer, Person> personCache2 = cr.personCache("person-cache2", "sts2", "Data_Region");
 
 		try (IgniteDataStreamer<Integer, Person> streamer = ignite.dataStreamer(personCache2.getName())) {
