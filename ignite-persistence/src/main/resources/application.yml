@@ -20,11 +20,19 @@ ignite:
     localPort: 42100  
   
   dataRegion:
-    initial: 268435456 # 256 * 1024 * 1024
-    max: 268435456 # 256 * 1024 * 1024
-    persistence: false
+    initial: 10435456 
+    max: 10435456 
+    name: Data_Region
     active: true
-      
+    
+  defaultRegion:
+    initial: 10435456 
+    max: 10435456 
+    name: Default_Region
+
+  caches:
+    backups: 1
+          
   other:
     clientMode: true
     records: 500

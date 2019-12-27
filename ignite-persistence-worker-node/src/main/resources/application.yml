@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: ignite-persistence-worker-node
+
+logging:
+  file: /var/tmp/logs/ignite-persistence-worker-node/ignite-persistence-worker-node
+  level:
+    root: INFO
+    poc.ignite: debug
+
+ignite:
+  ips:
+    - 172.17.5.36:42500..42700
+    #- 172.17.5.31:42500..42700
+    
+  tcpDiscoverySpi:
+    localPort: 42500
+  
+  tcpCommunicationSpi:
+    localPort: 42100
+
+  dataRegion:
+    initial: 268435456 # 256 * 1024 * 1024
+    max: 268435456 # 256 * 1024 * 1024
+    name: Data_Region
+      
+  defaultRegion:
+    initial: 268435456 # 256 * 1024 * 1024
+    max: 268435456 # 256 * 1024 * 1024
+    name: Default_Region
+    persistence: false
+    active: false    
+  
+  other:
+    nodeName: worker-node

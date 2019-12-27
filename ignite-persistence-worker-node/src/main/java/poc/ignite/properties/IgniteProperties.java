@@ -20,5 +20,4 @@ public class IgniteProperties {
 	private List<String> ips;
 	private Map<String, String> dataRegion;
 	private Map<String, String> defaultRegion;
-	private Map<String, String> caches;
 }

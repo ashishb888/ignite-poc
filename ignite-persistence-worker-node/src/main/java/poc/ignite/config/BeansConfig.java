@@ -1,5 +1,7 @@
 package poc.ignite.config;
 
+import java.util.Collections;
+
 import org.apache.ignite.Ignite;
 import org.apache.ignite.IgniteException;
 import org.apache.ignite.Ignition;
@@ -31,7 +33,6 @@ public class BeansConfig {
 		Ignite ignite = null;
 
 		try {
-
 			TcpDiscoverySpi spi = new TcpDiscoverySpi();
 
 			spi.setLocalPort(ip.getTcpDiscoverySpi().get("localPort"));
@@ -49,12 +50,11 @@ public class BeansConfig {
 			defaultRegion.setInitialSize(Long.valueOf(ip.getDefaultRegion().get("initial")));
 			defaultRegion.setMaxSize(Long.valueOf(ip.getDefaultRegion().get("max")));
 			storageCfg.setDefaultDataRegionConfiguration(defaultRegion);
-
+			
 			DataRegionConfiguration dataRegion = new DataRegionConfiguration();
 			dataRegion.setName(ip.getDataRegion().get("name"));
 			dataRegion.setInitialSize(Long.valueOf(ip.getDataRegion().get("initial")));
 			dataRegion.setMaxSize(Long.valueOf(ip.getDataRegion().get("max")));
-			dataRegion.setPersistenceEnabled(Boolean.valueOf(ip.getDataRegion().get("persistence")));
 			storageCfg.setDataRegionConfigurations(dataRegion);
 
 			TcpCommunicationSpi commSpi = new TcpCommunicationSpi();
@@ -64,18 +64,11 @@ public class BeansConfig {
 
 			igniteConfiguration.setDiscoverySpi(spi);
 			igniteConfiguration.setCommunicationSpi(commSpi);
-
+			igniteConfiguration.setDataStorageConfiguration(storageCfg);
 			igniteConfiguration.setFailureDetectionTimeout(90000);
-			// All properties should be in YAML
-			igniteConfiguration.setDiscoverySpi(spi);
-			igniteConfiguration.setIncludeEventTypes();
-			igniteConfiguration.setPublicThreadPoolSize(16);
-			igniteConfiguration.setSystemThreadPoolSize(16);
 			igniteConfiguration.setPeerClassLoadingEnabled(true);
-			// igniteConfiguration.setIgniteInstanceName("test";)
-
 			igniteConfiguration.setGridLogger(new Slf4jLogger());
-			igniteConfiguration.setClientMode(Boolean.valueOf(ip.getOther().get("clientMode")));
+			igniteConfiguration.setUserAttributes(Collections.singletonMap("nodeName", ip.getOther().get("nodeName")));
 
 			ignite = Ignition.getOrStart(igniteConfiguration);
 		} catch (IgniteException e) {
