@@ -25,15 +25,9 @@ public class CacheRepository {
 		personCacheConfig.setCacheMode(CacheMode.PARTITIONED);
 		personCacheConfig.setSqlSchema(schema);
 		personCacheConfig.setNodeFilter(new DataNodeFilter());
-
-		// if (regionName != null)
 		personCacheConfig.setDataRegionName(regionName);
 
-		log.debug("getCacheConfiguration: " + ignite.configuration().getCacheConfiguration());
-
-		// ignite.configuration().setCacheConfiguration(personCacheConfig);
 		ignite.addCacheConfiguration(personCacheConfig);
-
 		return ignite.getOrCreateCache(cacheName);
 	}
 }
