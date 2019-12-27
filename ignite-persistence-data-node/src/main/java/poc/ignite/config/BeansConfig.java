@@ -56,6 +56,9 @@ public class BeansConfig {
 			dataRegion.setInitialSize(Long.valueOf(ip.getDataRegion().get("initial")));
 			dataRegion.setMaxSize(Long.valueOf(ip.getDataRegion().get("max")));
 			dataRegion.setPersistenceEnabled(Boolean.valueOf(ip.getDataRegion().get("persistence")));
+			storageCfg.setStoragePath(ip.getDataRegion().get("storagePath"));
+			storageCfg.setWalPath(ip.getDataRegion().get("walPath"));
+			storageCfg.setWalArchivePath(ip.getDataRegion().get("walArchivePath"));
 			storageCfg.setDataRegionConfigurations(dataRegion);
 
 			TcpCommunicationSpi commSpi = new TcpCommunicationSpi();
