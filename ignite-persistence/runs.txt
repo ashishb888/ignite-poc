@@ -595,3 +595,183 @@ RUN 8: Backups
 2019-12-27 16:37:54.943  INFO 141624 --- [ange-worker-#97] o.a.i.i.p.cache.GridCacheProcessor       : Started cache [name=person-cache1, id=1419351655, memoryPolicyName=Default_Region, mode=PARTITIONED, atomicity=ATOMIC, backups=1]
 2019-12-27 16:37:55.326  INFO 141624 --- [ange-worker-#97] o.a.i.i.p.cache.GridCacheProcessor       : Started cache [name=person-cache2, id=1419351656, memoryPolicyName=Data_Region, mode=PARTITIONED, atomicity=ATOMIC, backups=1]
 
+
+----------==----------
+RUN 9: Data nodes & worker nodes
+
+[user@host ignite-persistence-data-node]$ $JAVA_HOME/bin/java -Xms1G -Xmx1G -Dlogging.file=/var/tmp/logs/ignite-persistence-data-node/ignite-persistence-data-node1 -jar ignite-persistence-data-node-0.0.1-SNAPSHOT.jar
+
+[user@host ignite-persistence-data-node]$ $JAVA_HOME/bin/java -Xms1G -Xmx1G -Dlogging.file=/var/tmp/logs/ignite-persistence-data-node/ignite-persistence-data-node2 -jar ignite-persistence-data-node-0.0.1-SNAPSHOT.jar
+
+[user@host ignite-persistence]$ $JAVA_HOME/bin/java -Xms1G -Xmx1G  -jar ignite-persistence-0.0.1-SNAPSHOT.jar
+
+[user@host ignite-persistence-worker-node]$ $JAVA_HOME/bin/java -Xms1G -Xmx1G  -jar ignite-persistence-worker-node-0.0.1-SNAPSHOT.jar
+
+
+
+[user@host apache-ignite-fabric-2.6.0-bin]$ ./bin/control.sh --baseline
+Control utility [ver. 2.6.0#20180710-sha1:669feacc]
+2018 Copyright(C) Apache Software Foundation
+User: user
+--------------------------------------------------------------------------------
+Cluster state: active
+Current topology version: 4
+
+Baseline nodes:
+    ConsistentID=36586157-d17b-44af-b861-9f8b05a2f603, STATE=ONLINE
+    ConsistentID=da4f789d-b7b0-4b12-a95b-628c9fcf56f9, STATE=ONLINE
+--------------------------------------------------------------------------------
+Number of baseline nodes: 2
+
+Other nodes not found.
+[user@host apache-ignite-fabric-2.6.0-bin]$
+[user@host apache-ignite-fabric-2.6.0-bin]$ ./bin/control.sh --baseline
+Control utility [ver. 2.6.0#20180710-sha1:669feacc]
+2018 Copyright(C) Apache Software Foundation
+User: user
+--------------------------------------------------------------------------------
+Cluster state: active
+Current topology version: 5
+
+Baseline nodes:
+    ConsistentID=36586157-d17b-44af-b861-9f8b05a2f603, STATE=ONLINE
+    ConsistentID=da4f789d-b7b0-4b12-a95b-628c9fcf56f9, STATE=ONLINE
+--------------------------------------------------------------------------------
+Number of baseline nodes: 2
+
+Other nodes:
+    ConsistentID=127.0.0.1,172.17.241.80,172.17.5.36:42502
+Number of other nodes: 1
+
+[user@host apache-ignite-fabric-2.6.0-bin]$ ./bin/control.sh --baseline
+Control utility [ver. 2.6.0#20180710-sha1:669feacc]
+2018 Copyright(C) Apache Software Foundation
+User: user
+--------------------------------------------------------------------------------
+Cluster state: active
+Current topology version: 9
+
+Baseline nodes:
+    ConsistentID=36586157-d17b-44af-b861-9f8b05a2f603, STATE=ONLINE
+    ConsistentID=da4f789d-b7b0-4b12-a95b-628c9fcf56f9, STATE=OFFLINE
+--------------------------------------------------------------------------------
+Number of baseline nodes: 2
+
+Other nodes not found.
+
+----------After all persistence nodes down. And one of them has started hence cluster state is inactive----------
+
+[user@host apache-ignite-fabric-2.6.0-bin]$ ./bin/control.sh --baseline
+Control utility [ver. 2.6.0#20180710-sha1:669feacc]
+2018 Copyright(C) Apache Software Foundation
+User: user
+--------------------------------------------------------------------------------
+Cluster state: inactive
+Current topology version: 1
+
+Baseline nodes:
+    ConsistentID=36586157-d17b-44af-b861-9f8b05a2f603, STATE=ONLINE
+    ConsistentID=da4f789d-b7b0-4b12-a95b-628c9fcf56f9, STATE=OFFLINE
+--------------------------------------------------------------------------------
+Number of baseline nodes: 2
+
+Other nodes not found.
+[user@host apache-ignite-fabric-2.6.0-bin]$ ./bin/control.sh --baseline
+Control utility [ver. 2.6.0#20180710-sha1:669feacc]
+2018 Copyright(C) Apache Software Foundation
+User: user
+--------------------------------------------------------------------------------
+Cluster state: active
+Current topology version: 2
+
+Baseline nodes:
+    ConsistentID=36586157-d17b-44af-b861-9f8b05a2f603, STATE=ONLINE
+    ConsistentID=da4f789d-b7b0-4b12-a95b-628c9fcf56f9, STATE=ONLINE
+--------------------------------------------------------------------------------
+Number of baseline nodes: 2
+
+Other nodes not found.
+[user@host apache-ignite-fabric-2.6.0-bin]$ ./bin/control.sh --baseline
+Control utility [ver. 2.6.0#20180710-sha1:669feacc]
+2018 Copyright(C) Apache Software Foundation
+User: user
+--------------------------------------------------------------------------------
+Cluster state: active
+Current topology version: 3
+
+Baseline nodes:
+    ConsistentID=36586157-d17b-44af-b861-9f8b05a2f603, STATE=ONLINE
+    ConsistentID=da4f789d-b7b0-4b12-a95b-628c9fcf56f9, STATE=ONLINE
+--------------------------------------------------------------------------------
+Number of baseline nodes: 2
+
+Other nodes:
+    ConsistentID=127.0.0.1,172.17.241.80,172.17.5.36:42502
+Number of other nodes: 1
+
+
+[user@host ~]$ $IGNITE_HOME/bin/sqlline.sh --verbose=true -u jdbc:ignite:thin://host:10800
+issuing: !connect jdbc:ignite:thin://host:10800 '' '' org.apache.ignite.IgniteJdbcThinDriver
+Connecting to jdbc:ignite:thin://host:10800
+Connected to: Apache Ignite (version 2.7.6#20190911-sha1:21f7ca41)
+Driver: Apache Ignite Thin JDBC Driver (version 2.6.0#20180710-sha1:669feacc)
+Autocommit status: true
+Transaction isolation: TRANSACTION_REPEATABLE_READ
+sqlline version 1.3.0
+0: jdbc:ignite:thin://host:10800> !tables
++--------------------------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------+------------------------------+
+|           TABLE_CAT            |          TABLE_SCHEM           |           TABLE_NAME           |           TABLE_TYPE           |            REMARKS             |            TYPE_CAT          |
++--------------------------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------+------------------------------+
+|                                | STS1                           | PERSON                         | TABLE                          |                                |                              |
++--------------------------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------+------------------------------+
+0: jdbc:ignite:thin://host:10800> select count(*) from "STS1".PERSON;
++--------------------------------+
+|            COUNT(*)            |
++--------------------------------+
+| 5000                           |
++--------------------------------+
+1 row selected (0.2 seconds)
+0: jdbc:ignite:thin://host:10800> select * from "STS1".PERSON limit 5;
++--------------------------------+--------------------------------+--------------------------------+
+|               ID               |             CITYID             |              NAME              |
++--------------------------------+--------------------------------+--------------------------------+
+| 1                              | 1                              | p1                             |
+| 2                              | 2                              | p2                             |
+| 3                              | 3                              | p3                             |
+| 4                              | 4                              | p4                             |
+| 5                              | 5                              | p5                             |
++--------------------------------+--------------------------------+--------------------------------+
+5 rows selected (0.03 seconds)
+0: jdbc:ignite:thin://host:10800> Closing: org.apache.ignite.internal.jdbc.thin.JdbcThinConnection
+[user@host ~]$ $IGNITE_HOME/bin/sqlline.sh --verbose=true -u jdbc:ignite:thin://host:10803
+issuing: !connect jdbc:ignite:thin://host:10803 '' '' org.apache.ignite.IgniteJdbcThinDriver
+Connecting to jdbc:ignite:thin://host:10803
+Connected to: Apache Ignite (version 2.7.6#20190911-sha1:21f7ca41)
+Driver: Apache Ignite Thin JDBC Driver (version 2.6.0#20180710-sha1:669feacc)
+Autocommit status: true
+Transaction isolation: TRANSACTION_REPEATABLE_READ
+sqlline version 1.3.0
+0: jdbc:ignite:thin://host:10803> !tables
++--------------------------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------+------------------------------+
+|           TABLE_CAT            |          TABLE_SCHEM           |           TABLE_NAME           |           TABLE_TYPE           |            REMARKS             |            TYPE_CAT          |
++--------------------------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------+------------------------------+
+|                                | STS2                           | PERSON                         | TABLE                          |                                |                              |
++--------------------------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------+------------------------------+
+0: jdbc:ignite:thin://host:10803> select count(*) from "STS2".PERSON;
++--------------------------------+
+|            COUNT(*)            |
++--------------------------------+
+| 5000                           |
++--------------------------------+
+1 row selected (0.129 seconds)
+0: jdbc:ignite:thin://host:10803> select * from "STS2".PERSON limit 5;
++--------------------------------+--------------------------------+--------------------------------+
+|               ID               |             CITYID             |              NAME              |
++--------------------------------+--------------------------------+--------------------------------+
+| 0                              | 0                              | p0                             |
+| 1                              | 1                              | p1                             |
+| 2                              | 2                              | p2                             |
+| 3                              | 3                              | p3                             |
+| 4                              | 4                              | p4                             |
++--------------------------------+--------------------------------+--------------------------------+
+5 rows selected (0.026 seconds)

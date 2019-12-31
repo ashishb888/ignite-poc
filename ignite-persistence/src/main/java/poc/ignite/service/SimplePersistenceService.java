@@ -36,7 +36,7 @@ public class SimplePersistenceService {
 
 		// IgniteCache<Integer, Person> personCache1 = cr.personCache("person-cache1",
 		// "sts1", "Default_Region");
-		IgniteCache<Integer, Person> personCache1 = cr.personCacheDataNode("person-cache1", "sts1", "Default_Region");
+		IgniteCache<Integer, Person> personCache1 = cr.personCacheDataNode("person-cache1", "sts1", "Data_Region");
 		int records = Integer.valueOf(ip.getOther().get("records"));
 
 		try (IgniteDataStreamer<Integer, Person> streamer = ignite.dataStreamer(personCache1.getName())) {
@@ -49,7 +49,7 @@ public class SimplePersistenceService {
 
 		// IgniteCache<Integer, Person> personCache2 = cr.personCache("person-cache2",
 		// "sts2", "Data_Region");
-		IgniteCache<Integer, Person> personCache2 = cr.personCacheDataNode("person-cache2", "sts2", "Data_Region");
+		IgniteCache<Integer, Person> personCache2 = cr.personCacheWorkeNode("person-cache2", "sts2", "Default_Region");
 
 		try (IgniteDataStreamer<Integer, Person> streamer = ignite.dataStreamer(personCache2.getName())) {
 			for (int i = 0; i < records; i++) {
