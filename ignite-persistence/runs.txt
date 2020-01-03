@@ -775,3 +775,79 @@ sqlline version 1.3.0
 | 4                              | 4                              | p4                             |
 +--------------------------------+--------------------------------+--------------------------------+
 5 rows selected (0.026 seconds)
+
+
+----------==----------
+RUN 10: Forming baseline topology
+
+Step 1:
+
+[user@host ignite-persistence-data-node]$ $JAVA_HOME/bin/java -Xms1G -Xmx1G -Dlogging.file=/var/tmp/logs/ignite-persistence-data-node/ignite-persistence-data-node1 -jar ignite-persistence-data-node-0.0.1-SNAPSHOT.jar
+[user@host apache-ignite-2.7.6-bin]$ ./bin/control.sh --baseline
+Control utility [ver. 2.7.6#20190911-sha1:21f7ca41]
+2019 Copyright(C) Apache Software Foundation
+User: user
+--------------------------------------------------------------------------------
+Cluster state: inactive
+Current topology version: 1
+
+Baseline nodes not found.
+
+Step 2:
+
+[user@host ignite-persistence]$ $JAVA_HOME/bin/java -Xms1G -Xmx1G  -jar ignite-persistence-0.0.1-SNAPSHOT.jar
+[user@host apache-ignite-2.7.6-bin]$ ./bin/control.sh --baseline
+Control utility [ver. 2.7.6#20190911-sha1:21f7ca41]
+2019 Copyright(C) Apache Software Foundation
+User: user
+--------------------------------------------------------------------------------
+Cluster state: active
+Current topology version: 2
+
+Baseline nodes:
+    ConsistentID=56da6d21-759f-4220-89a0-26557e2fd8fc, STATE=ONLINE
+--------------------------------------------------------------------------------
+Number of baseline nodes: 1
+
+Other nodes not found.
+
+Step 3:
+
+[user@host ignite-persistence-data-node]$ $JAVA_HOME/bin/java -Xms1G -Xmx1G -Dlogging.file=/var/tmp/logs/ignite-persistence-data-node/ignite-persistence-data-node2 -jar ignite-persistence-data-node-0.0.1-SNAPSHOT.jar
+[user@host apache-ignite-2.7.6-bin]$ ./bin/control.sh --baseline
+Control utility [ver. 2.7.6#20190911-sha1:21f7ca41]
+2019 Copyright(C) Apache Software Foundation
+User: user
+--------------------------------------------------------------------------------
+Cluster state: active
+Current topology version: 4
+
+Baseline nodes:
+    ConsistentID=56da6d21-759f-4220-89a0-26557e2fd8fc, STATE=ONLINE
+--------------------------------------------------------------------------------
+Number of baseline nodes: 1
+
+Other nodes:
+    ConsistentID=32963c74-dab0-4b89-aba8-84c3f85a61d7
+Number of other nodes: 1
+
+Step 4:
+
+[user@host ignite-persistence]$ $JAVA_HOME/bin/java -Xms1G -Xmx1G  -jar ignite-persistence-0.0.1-SNAPSHOT.jar
+
+[user@host apache-ignite-2.7.6-bin]$ ./bin/control.sh --baseline
+Control utility [ver. 2.7.6#20190911-sha1:21f7ca41]
+2019 Copyright(C) Apache Software Foundation
+User: user
+--------------------------------------------------------------------------------
+Cluster state: active
+Current topology version: 5
+
+Baseline nodes:
+    ConsistentID=56da6d21-759f-4220-89a0-26557e2fd8fc, STATE=ONLINE
+--------------------------------------------------------------------------------
+Number of baseline nodes: 1
+
+Other nodes:
+    ConsistentID=32963c74-dab0-4b89-aba8-84c3f85a61d7
+Number of other nodes: 1
