@@ -38,4 +38,5 @@ ignite:
     records: 500
     nodes: 2
     start: false
+    topVer: 2
     
