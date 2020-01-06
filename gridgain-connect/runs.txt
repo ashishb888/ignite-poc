@@ -91,3 +91,105 @@ ignite:
 2019-12-05 18:49:24.782  INFO 155640 --- [           main] poc.ignite.service.ConnectService        : k: 10,v: SQL_PUBLIC_PERSON_6e93302a_d369_4c93_906c_55e5b25ec40c [idHash=718187988, hash=950833226, CITY_ID=4, NAME=AB]
 
 ----------==----------
+RUN 2: Schemaless: Putting IgniteBinaryConverter to Kafka 
+
+[hdpusr@hdpdev6 gridgain-enterprise-8.7.6]$ ./bin/ignite.sh config/ignite-server-source.xml
+
+0: jdbc:ignite:thin://hdpdev6:10800> !tables
++--------------------------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------+------------------------------+
+|           TABLE_CAT            |          TABLE_SCHEM           |           TABLE_NAME           |           TABLE_TYPE           |            REMARKS             |            TYPE_CAT          |
++--------------------------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------+------------------------------+
++--------------------------------+--------------------------------+--------------------------------+--------------------------------+--------------------------------+------------------------------+
+0: jdbc:ignite:thin://hdpdev6:10800> CREATE TABLE IF NOT EXISTS Person1 (id int, cityId int, name varchar, PRIMARY KEY (id, cityId)) WITH "template=partitioned,backups=1,affinity_key=cityId, key_type=Person3Key, value_type=Person3, cache_name=pqr";
+No rows affected (0.277 seconds)
+0: jdbc:ignite:thin://hdpdev6:10800> INSERT INTO PERSON1 (id, name, cityid) VALUES (1000, 'Ashish Bhosle', 8);
+1 row affected (0.064 seconds)
+0: jdbc:ignite:thin://hdpdev6:10800> INSERT INTO PERSON1 (id, name, cityid) VALUES (1001, 'Anand Bhosle', 8);
+1 row affected (0.008 seconds)
+0: jdbc:ignite:thin://hdpdev6:10800>
+
+
+[hdpusr@hdpdev6 kafka_2.12-2.3.0]$ cat config/gg-source-connect-standalone.properties
+bootstrap.servers=localhost:7092
+key.converter=org.gridgain.kafka.IgniteBinaryConverter
+value.converter=org.gridgain.kafka.IgniteBinaryConverter
+key.converter.schemas.enable=false
+value.converter.schemas.enable=false
+offset.storage.file.filename=/tmp/connect.offsets
+offset.flush.interval.ms=10000
+plugin.path=/opt/ngs/ashishb/packages/kafka_2.12-2.3.0/plugins/gridgain-kafka-connect
+rest.port=8084
+
+[hdpusr@hdpdev6 kafka_2.12-2.3.0]$ cat config/connect-gg-source.properties
+name=gridgain-quickstart-source
+tasks.max=1
+connector.class=org.gridgain.kafka.source.IgniteSourceConnector
+igniteCfg=/opt/ngs/ashishb/packages/gridgain-enterprise-8.7.6/config/ignite-server-source.xml
+topicPrefix=abc
+isSchemaless=true
+
+[hdpusr@hdpdev6 kafka_2.12-2.3.0]$ ./bin/connect-standalone.sh config/gg-source-connect-standalone.properties config/connect-gg-source.properties
+[hdpusr@hdpdev6 kafka_2.12-2.3.0]$ ./bin/connect-standalone.sh config/gg-source-connect-standalone.properties config/connect-gg-source.properties
+[hdpusr@hdpdev6 kafka_2.12-2.3.0]$ $KAFKA_HOME/bin/kafka-run-class.sh kafka.tools.GetOffsetShell --broker-list  localhost:7092  --topic abcpqr  --time -1 --offsets 1 | awk -F ":" '{sum += $3} END {print sum'}
+2
+[hdpusr@hdpdev6 kafka_2.12-2.3.0]$ ./bin/kafka-console-consumer.sh --bootstrap-server localhost:7092 --property print.key=true --from-beginning --topic abcpqr                                       +!¶d((Ã$©Ï
+          *"è   +~Ï×`§d+[
+Ashish Bhosle            Åu*
++!¶d(}lW$©Ï
+           *"é  +~Ï×Õø*[
+                        Åu)
+Anand Bhosle
+
+
+----------==----------
+RUN 3: Schemaless: Putting IgniteBinaryConverter to Ignite cache 
+
+visor> cache -a
+Time of the snapshot: 2020-01-06 13:36:59
++======================================================================================================================================================+
+| Name(@)  |    Mode     | Nodes | Total entries (Heap / Off-heap) | Primary entries (Heap / Off-heap) |   Hits    |  Misses   |   Reads   |  Writes   |
++======================================================================================================================================================+
+| pqr(@c0) | PARTITIONED | 1     | 2 (0 / 2)                       | min: 2 (0 / 2)                    | min: 0    | min: 0    | min: 0    | min: 0    |
+|          |             |       |                                 | avg: 2.00 (0.00 / 2.00)           | avg: 0.00 | avg: 0.00 | avg: 0.00 | avg: 0.00 |
+|          |             |       |                                 | max: 2 (0 / 2)                    | max: 0    | max: 0    | max: 0    | max: 0    |
++------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+Cache 'pqr(@c0)':
++------------------------------------------------+
+| Name(@)                         | pqr(@c0)     |
+| Total entries (Heap / Off-heap) | 2 (0 / 2)    |
+| Nodes                           | 1            |
+| Total size Min/Avg/Max          | 2 / 2.00 / 2 |
+|   Heap size Min/Avg/Max         | 0 / 0.00 / 0 |
+|   Off-heap size Min/Avg/Max     | 2 / 2.00 / 2 |
+
+
+[hdpusr@hdpdev6 kafka_2.12-2.3.0]$ cat config/gg-connect-standalone.properties
+bootstrap.servers=localhost:7092
+key.converter=org.gridgain.kafka.IgniteBinaryConverter
+value.converter=org.gridgain.kafka.IgniteBinaryConverter
+key.converter.schemas.enable=false
+value.converter.schemas.enable=false
+#key.converter=org.apache.kafka.connect.converters.ByteArrayConverter
+#key.converter=org.apache.kafka.connect.storage.StringConverter
+#value.converter=org.apache.kafka.connect.converters.StringConverter
+#value.converter=org.apache.kafka.connect.converters.ByteArrayConverter
+offset.storage.file.filename=/tmp/connect.offsets
+# Flush much faster than normal, which is useful for testing/debugging
+offset.flush.interval.ms=10000
+plugin.path=/opt/ngs/ashishb/packages/kafka_2.12-2.3.0/plugins/gridgain-kafka-connect
+rest.port=8083
+
+[hdpusr@hdpdev6 kafka_2.12-2.3.0]$ cat config/connect-gg-sink.properties
+name=gridgain-quickstart18
+topics=abcpqr
+tasks.max=1
+connector.class=org.gridgain.kafka.sink.IgniteSinkConnector
+igniteCfg=/opt/ngs/ashishb/packages/gridgain-enterprise-8.7.6/config/ignite-server-sink.xml
+topicPrefix=abc
+
+Web console:
+
+Key Class,Key,Value Class,Value
+"o.a.i.i.binary.BinaryObjectImpl","BinaryObjectImpl [hash=-1020785122, typeId=677688865]","o.a.i.i.binary.BinaryObjectImpl","BinaryObjectImpl [hash=1678944096, typeId=-678441090]"
+"o.a.i.i.binary.BinaryObjectImpl","BinaryObjectImpl [hash=1466727711, typeId=677688865]","o.a.i.i.binary.BinaryObjectImpl","BinaryObjectImpl [hash=138868949, typeId=-678441090]"

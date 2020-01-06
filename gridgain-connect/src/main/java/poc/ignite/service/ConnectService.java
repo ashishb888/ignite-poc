@@ -7,6 +7,7 @@ import javax.cache.CacheException;
 
 import org.apache.ignite.Ignite;
 import org.apache.ignite.IgniteCache;
+import org.apache.ignite.binary.BinaryObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,8 +41,13 @@ public class ConnectService {
 
 				ignite.cache(ip.getOther().get("cacheName")).withKeepBinary().forEach(r -> {
 					log.info("k: " + r.getKey() + ",v: " + r.getValue());
-					log.info("k: " + Arrays.toString((byte[]) r.getKey()) + ",v: "
-							+ Arrays.toString((byte[]) r.getValue()));
+//					log.info("k: " + Arrays.toString((byte[]) r.getKey()) + ",v: "
+//							+ Arrays.toString((byte[]) r.getValue()));
+					BinaryObject key = (BinaryObject) r.getKey();
+					log.info("key: " + key.field("id") + ", " + key.field("cityId"));
+
+					BinaryObject value = (BinaryObject) r.getValue();
+					log.info("value: " + value.field("id") + ", " + value.field("cityId") + ", " + value.field("name"));
 
 				});
 			} catch (CacheException e) {
