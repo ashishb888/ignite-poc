@@ -105,8 +105,8 @@ public class SimplePersistenceService {
 		ignite.cluster().active(Boolean.valueOf(ip.getDataRegion().get("active")));
 
 		Collection<ClusterNode> dataNodes = ignite.cluster().forAttribute("nodeName", "data-node").nodes();
-		// ignite.cluster().setBaselineTopology(dataNodes);
-		ignite.cluster().setBaselineTopology(Long.valueOf(ip.getOther().get("topVer")));
+		ignite.cluster().setBaselineTopology(dataNodes);
+		//ignite.cluster().setBaselineTopology(Long.valueOf(ip.getOther().get("topVer")));
 	}
 
 	public void main() {

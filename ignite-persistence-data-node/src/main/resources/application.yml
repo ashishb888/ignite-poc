@@ -25,7 +25,7 @@ ignite:
     name: Data_Region
     persistence: true
     active: true
-    storagePath: /opt/ngs/setups/apache-ignite-fabric-2.6.0-bin/db
+    storagePath: /var/tmp/db
     walPath: ${storagePath}/wal
     walArchivePath: ${walPath}/archive
     
