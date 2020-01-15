@@ -59,6 +59,10 @@ public class BeansConfig {
 			storageCfg.setStoragePath(ip.getDataRegion().get("storagePath"));
 			storageCfg.setWalPath(ip.getDataRegion().get("walPath"));
 			storageCfg.setWalArchivePath(ip.getDataRegion().get("walArchivePath"));
+			storageCfg.setWalCompactionEnabled(Boolean.valueOf(ip.getDataRegion().get("walCompactionEnabled")));
+			storageCfg.setWalSegments(Integer.valueOf(ip.getDataRegion().get("walSegments")));
+			storageCfg
+					.setWalSegmentSize(Integer.valueOf(ip.getDataRegion().get("walSegmentSize")) * 1024 * 1024 * 1024);
 			storageCfg.setDataRegionConfigurations(dataRegion);
 
 			TcpCommunicationSpi commSpi = new TcpCommunicationSpi();
