@@ -26,8 +26,8 @@ ignite:
     persistence: true
     active: true
     storagePath: /var/tmp/db
-    walPath: ${storagePath}/wal # To disable archiving, set the WAL path and the WAL archive path to the same value
-    walArchivePath: ${walPath}
+    walPath: /var/tmp/db/wal # To disable archiving, set the WAL path and the WAL archive path to the same value
+    walArchivePath: /var/tmp/db/wal
     walCompactionEnabled: true
     walSegmentSize: 1 #GB
     walSegments: 10
