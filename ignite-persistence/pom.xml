@@ -11,9 +11,8 @@
 	<properties>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<ignite.version>2.5.14</ignite.version>
-		<h2.version>1.4.195</h2.version>
-		<gridgain.version>8.5.14</gridgain.version>
+		<ignite.version>2.7.6</ignite.version>
+		<h2.version>1.4.197</h2.version>
 	</properties>
 
 	<parent>
@@ -37,12 +36,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
-		</dependency>
-
-		<dependency>
-			<groupId>org.gridgain</groupId>
-			<artifactId>gridgain-core</artifactId>
-			<version>${gridgain.version}</version>
 		</dependency>
 
 		<dependency>
@@ -75,13 +68,6 @@
 			<version>${h2.version}</version>
 		</dependency>
 	</dependencies>
-
-	<repositories>
-		<repository>
-			<id>GridGain External Repository</id>
-			<url>http://www.gridgainsystems.com/nexus/content/repositories/external</url>
-		</repository>
-	</repositories>
 
 	<build>
 		<plugins>

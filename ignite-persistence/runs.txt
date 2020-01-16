@@ -878,3 +878,26 @@ total 5.0G
 -rw-r----- 1 hdpusr nse 1.0G Jan 16 16:47 0000000000000011.wal
 -rw-r----- 1 hdpusr nse 1.0G Jan 16 16:48 0000000000000012.wal
 user@host tmp]$
+
+----------==----------
+RUN 12: Disabling WAL archive with below versions works fast
+	
+	<ignite.version>2.7.6</ignite.version>
+	<h2.version>1.4.197</h2.version> 
+
+user@host tmp]$ ls -lrth /opt/ngs/db/wal/node00-949e1e87-540c-4fc2-919f-c1702099adfb/
+total 2.0G
+-rw-r----- 1 hdpusr nse 1.0G Jan 16 17:02 0000000000000000.wal
+-rw-r----- 1 hdpusr nse 1.0G Jan 16 17:02 0000000000000001.wal
+user@host tmp]$
+user@host tmp]$
+user@host tmp]$ ls -lrth /opt/ngs/db/wal/node00-949e1e87-540c-4fc2-919f-c1702099adfb/
+total 2.0G
+-rw-r----- 1 hdpusr nse 1.0G Jan 16 17:03 0000000000000001.wal
+-rw-r----- 1 hdpusr nse 1.0G Jan 16 17:03 0000000000000002.wal
+user@host tmp]$ ls -lrth /opt/ngs/db/wal/node01-3e4c45b1-a803-4ea2-b37f-ba37884b9c19/
+total 2.0G
+-rw-r----- 1 hdpusr nse 1.0G Jan 16 17:02 0000000000000001.wal
+-rw-r----- 1 hdpusr nse 1.0G Jan 16 17:03 0000000000000002.wal
+user@host tmp]$
+
