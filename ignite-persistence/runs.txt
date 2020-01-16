@@ -851,3 +851,30 @@ Number of baseline nodes: 1
 Other nodes:
     ConsistentID=32963c74-dab0-4b89-aba8-84c3f85a61d7
 Number of other nodes: 1
+
+
+----------==----------
+RUN 11: Disabling WAL archive with below versions works slow 
+
+		<ignite.version>2.5.14</ignite.version>
+		<h2.version>1.4.195</h2.version>
+		<gridgain.version>8.5.14</gridgain.version>
+
+
+user@host tmp]$ ls -lrth /opt/ngs/db/wal/node00-a61bb471-3b77-44b8-8bb6-c68afd123819/
+total 4.0G
+-rw-r----- 1 hdpusr nse 1.0G Jan 16 16:45 0000000000000008.wal
+-rw-r----- 1 hdpusr nse 1.0G Jan 16 16:46 0000000000000009.wal
+-rw-r----- 1 hdpusr nse 1.0G Jan 16 16:47 0000000000000010.wal
+-rw-r----- 1 hdpusr nse 1.0G Jan 16 16:47 0000000000000011.wal
+user@host tmp]$
+
+
+user@host tmp]$ ls -lrth /opt/ngs/db/wal/node01-8ea0b60c-d6e6-46d6-987a-dd6207992a51/
+total 5.0G
+-rw-r----- 1 hdpusr nse 1.0G Jan 16 16:45 0000000000000008.wal
+-rw-r----- 1 hdpusr nse 1.0G Jan 16 16:45 0000000000000009.wal
+-rw-r----- 1 hdpusr nse 1.0G Jan 16 16:46 0000000000000010.wal
+-rw-r----- 1 hdpusr nse 1.0G Jan 16 16:47 0000000000000011.wal
+-rw-r----- 1 hdpusr nse 1.0G Jan 16 16:48 0000000000000012.wal
+user@host tmp]$
