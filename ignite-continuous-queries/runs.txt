@@ -1,0 +1,65 @@
+RUN 1
+
+[user@host ignite-continuous-queries]$ $JAVA_HOME/bin/java -Xms1G -Xmx1G  -jar ignite-continuous-queries-0.0.1-SNAPSHOT.jar
+
+
+2020-01-21 16:44:03.219  INFO 52299 --- [           main] org.apache.ignite.internal.IgniteKernal  :
+
+>>> +-----------------------------------------------------------------------+
+>>> Ignite ver. 2.5.14#20191218-sha1:6f912e06e4ec016a4a4ff28d6848c732f36201b6
+>>> +-----------------------------------------------------------------------+
+>>> OS name: Linux 3.10.0-957.10.1.el7.x86_64 amd64
+>>> CPU(s): 32
+>>> Heap: 1.0GB
+>>> VM name: 52299@hdpdev6
+>>> Local node [ID=6755B844-CB4F-4B96-A209-DDBD0CCF833A, order=1, clientMode=false]
+>>> Local node addresses: [hdpdev6/127.0.0.1, hdpdev6_oob.nseroot.com/172.17.241.80, /172.17.5.36]
+>>> Local ports: TCP:10801 TCP:11212 TCP:42100 TCP:42500
+
+[16:44:03] Topology snapshot [ver=1, servers=1, clients=0, CPUs=32, offheap=25.0GB, heap=1.0GB]
+[16:44:03]   ^-- Node [id=6755B844-CB4F-4B96-A209-DDBD0CCF833A, clusterState=ACTIVE]
+[16:44:03] Data Regions Configured:
+[16:44:03]   ^-- default [initSize=256.0 MiB, maxSize=25.1 GiB, persistenceEnabled=false]
+2020-01-21 16:44:03.222  INFO 52299 --- [           main] o.a.i.i.m.d.GridDiscoveryManager         : Topology snapshot [ver=1, servers=1, clients=0, CPUs=32, offheap=25.0GB, heap=1.0GB]
+2020-01-21 16:44:03.222  INFO 52299 --- [           main] o.a.i.i.m.d.GridDiscoveryManager         :   ^-- Node [id=6755B844-CB4F-4B96-A209-DDBD0CCF833A, clusterState=ACTIVE]
+2020-01-21 16:44:03.222  INFO 52299 --- [           main] o.a.i.i.m.d.GridDiscoveryManager         : Data Regions Configured:
+2020-01-21 16:44:03.223  INFO 52299 --- [           main] o.a.i.i.m.d.GridDiscoveryManager         :   ^-- default [initSize=256.0 MiB, maxSize=25.1 GiB, persistenceEnabled=false]
+
+2020-01-21 16:44:59.916 DEBUG 52299 --- [er-stripe-8-#41] p.i.d.CacheEntryUpdatedListenerImpl      : cacheEntryEvent: Person(id=8, cityId=8, name=p8)
+2020-01-21 16:44:59.916 DEBUG 52299 --- [er-stripe-7-#40] p.i.d.CacheEntryUpdatedListenerImpl      : cacheEntryEvent: Person(id=7, cityId=7, name=p7)
+2020-01-21 16:44:59.916 DEBUG 52299 --- [er-stripe-2-#35] p.i.d.CacheEntryUpdatedListenerImpl      : cacheEntryEvent: Person(id=2, cityId=2, name=p2)
+2020-01-21 16:44:59.916 DEBUG 52299 --- [er-stripe-3-#36] p.i.d.CacheEntryUpdatedListenerImpl      : cacheEntryEvent: Person(id=3, cityId=3, name=p3)
+2020-01-21 16:44:59.916 DEBUG 52299 --- [er-stripe-9-#42] p.i.d.CacheEntryUpdatedListenerImpl      : cacheEntryEvent: Person(id=9, cityId=9, name=p9)
+2020-01-21 16:44:59.926 DEBUG 52299 --- [       sys-#119] p.i.d.CacheEntryUpdatedListenerImpl      : cacheEntryEvent: Person(id=6, cityId=6, name=p6)
+2020-01-21 16:44:59.926 DEBUG 52299 --- [       sys-#119] p.i.d.CacheEntryUpdatedListenerImpl      : cacheEntryEvent: Person(id=1, cityId=1, name=p1)
+2020-01-21 16:44:59.926 DEBUG 52299 --- [       sys-#119] p.i.d.CacheEntryUpdatedListenerImpl      : cacheEntryEvent: Person(id=5, cityId=5, name=p5)
+2020-01-21 16:44:59.929 DEBUG 52299 --- [       sys-#109] p.i.d.CacheEntryUpdatedListenerImpl      : cacheEntryEvent: Person(id=4, cityId=4, name=p4)
+2020-01-21 16:44:59.930 DEBUG 52299 --- [       sys-#111] p.i.d.CacheEntryUpdatedListenerImpl      : cacheEntryEvent: Person(id=0, cityId=0, name=p0)
+
+----------
+
+[user@host ignite-continuous-queries-client]$ $JAVA_HOME/bin/java -Xms1G -Xmx1G  -jar ignite-continuous-queries-client-0.0.1-SNAPSHOT.jar
+
+2020-01-21 16:44:09.604  INFO 52500 --- [           main] org.apache.ignite.internal.IgniteKernal  :
+
+>>> +-----------------------------------------------------------------------+
+>>> Ignite ver. 2.5.14#20191218-sha1:6f912e06e4ec016a4a4ff28d6848c732f36201b6
+>>> +-----------------------------------------------------------------------+
+>>> OS name: Linux 3.10.0-957.10.1.el7.x86_64 amd64
+>>> CPU(s): 32
+>>> Heap: 1.0GB
+>>> VM name: 52500@hdpdev6
+>>> Local node [ID=F41590E6-6DDF-4D26-B788-0ABF42D53583, order=2, clientMode=false]
+>>> Local node addresses: [hdpdev6/127.0.0.1, hdpdev6_oob.nseroot.com/172.17.241.80, /172.17.5.36]
+>>> Local ports: TCP:10802 TCP:11213 TCP:42101 TCP:42501
+
+[16:44:09] Topology snapshot [ver=2, servers=2, clients=0, CPUs=32, offheap=50.0GB, heap=2.0GB]
+[16:44:09]   ^-- Node [id=F41590E6-6DDF-4D26-B788-0ABF42D53583, clusterState=ACTIVE]
+[16:44:09] Data Regions Configured:
+[16:44:09]   ^-- default [initSize=256.0 MiB, maxSize=25.1 GiB, persistenceEnabled=false]
+2020-01-21 16:44:09.607  INFO 52500 --- [           main] o.a.i.i.m.d.GridDiscoveryManager         : Topology snapshot [ver=2, servers=2, clients=0, CPUs=32, offheap=50.0GB, heap=2.0GB]
+2020-01-21 16:44:09.607  INFO 52500 --- [           main] o.a.i.i.m.d.GridDiscoveryManager         :   ^-- Node [id=F41590E6-6DDF-4D26-B788-0ABF42D53583, clusterState=ACTIVE]
+2020-01-21 16:44:09.607  INFO 52500 --- [           main] o.a.i.i.m.d.GridDiscoveryManager         : Data Regions Configured:
+2020-01-21 16:44:09.608  INFO 52500 --- [           main] o.a.i.i.m.d.GridDiscoveryManager         :   ^-- default [initSize=256.0 MiB, maxSize=25.1 GiB, persistenceEnabled=false]
+
+----------==----------
