@@ -1,0 +1,177 @@
+RUN 1
+
+Description: 
+There are two server nodes
+	Node 1: 2, 3, 7, 8, 9, 10, 12, 13, 14, 18, 20
+	Node 2: 0, 1, 4, 5, 6, 11, 15, 16, 17, 19
+
+First we put 50 record (25 records per node). Then we have only put records for Node 1 partitions. Node 1 went OOM, but no data rebalancing
+between Node 1 & Node 2 
+
+Before OOM
+
+Node 1
+
+[user@host ignite-data-rebalance]$ $JAVA_HOME/bin/java -Xms1G -Xmx1G  -jar ignite-data-rebalance-0.0.1-SNAPSHOT.jar
+
+
+2020-01-22 16:30:52.803  INFO 53606 --- [           main] org.apache.ignite.internal.IgniteKernal  :
+
+>>> +----------------------------------------------------------------------+
+>>> Ignite ver. 2.7.6#20190911-sha1:21f7ca41c4348909e2fd26ccf59b5b2ce1f4474e
+>>> +----------------------------------------------------------------------+
+>>> OS name: Linux 3.10.0-957.10.1.el7.x86_64 amd64
+>>> CPU(s): 32
+>>> Heap: 1.0GB
+>>> VM name: 53606@host
+>>> Local node [ID=B9B79B3F-DE34-4A74-A231-1302F20733B8, order=1, clientMode=false]
+>>> Local node addresses: [host/127.0.0.1, host_oob.nseroot.com/172.17.241.80, /172.17.5.36]
+>>> Local ports: TCP:10801 TCP:11212 TCP:42100 TCP:42500
+
+[16:30:52] Topology snapshot [ver=1, locNode=b9b79b3f, servers=1, clients=0, state=ACTIVE, CPUs=32, offheap=0.5GB, heap=1.0GB]
+
+2020-01-22 16:44:42.790 DEBUG 53606 --- [ent-worker-#102] poc.ignite.service.DataRebalanceService  : primaryPartitions: [2, 3, 7, 8, 9, 10, 12, 13, 14, 18, 20, 22, 23, 25, 27, 31, 35, 36, 37, 40, 42, 45, 47, 48, 52, 56, 57, 58, 60, 61, 64, 65, 67, 68, 69, 70, 71, 74, 77, 79, 84, 86, 88, 92, 96, 97, 99, 100, 101, 102, 110, 113, 114, 118, 123, 130, 135, 138, 141, 143, 149, 150, 151, 155, 156, 157, 158, 159, 161, 162, 163, 164, 167, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 181, 183, 184, 185, 186, 188, 191, 192, 194, 195, 196, 197, 199, 200, 202, 203, 205, 206, 207, 209, 212, 213, 219, 220, 221, 222, 224, 225, 226, 227, 230, 232, 233, 234, 236, 237, 243, 244, 246, 249, 250, 251, 253, 254, 255, 256, 258, 259, 260, 261, 262, 267, 271, 274, 276, 278, 279, 281, 283, 286, 287, 291, 294, 295, 298, 300, 301, 302, 303, 306, 307, 312, 315, 319, 323, 326, 332, 335, 336, 337, 338, 339, 340, 342, 344, 346, 347, 348, 349, 358, 359, 362, 363, 365, 367, 368, 370, 371, 372, 374, 375, 377, 381, 384, 385, 387, 388, 389, 392, 393, 396, 397, 398, 399, 400, 403, 404, 405, 406, 409, 410, 412, 413, 414, 415, 417, 418, 419, 420, 422, 424, 427, 429, 432, 434, 437, 440, 444, 447, 451, 456, 458, 461, 462, 464, 465, 466, 469, 471, 476, 477, 478, 480, 481, 482, 484, 485, 486, 487, 489, 490, 491, 493, 494, 497, 500, 502, 504, 506, 508, 509, 514, 515, 516, 517, 519, 524, 529, 531, 532, 537, 538, 542, 544, 545, 548, 551, 555, 560, 562, 563, 566, 568, 574, 576, 577, 579, 581, 584, 585, 588, 589, 590, 591, 592, 593, 596, 597, 598, 601, 602, 604, 605, 606, 608, 610, 611, 612, 613, 614, 615, 617, 618, 621, 625, 628, 631, 633, 635, 640, 643, 648, 650, 651, 653, 656, 658, 659, 660, 661, 664, 668, 669, 670, 671, 672, 673, 677, 678, 680, 681, 683, 684, 688, 690, 693, 694, 695, 698, 699, 702, 704, 705, 706, 709, 711, 712, 713, 714, 716, 719, 721, 723, 725, 729, 730, 732, 734, 736, 739, 740, 742, 743, 744, 747, 749, 750, 752, 754, 756, 758, 759, 760, 761, 765, 770, 771, 774, 775, 779, 786, 787, 788, 790, 791, 792, 794, 796, 803, 804, 805, 807, 808, 812, 813, 818, 819, 823, 825, 828, 829, 830, 832, 834, 835, 837, 838, 840, 841, 844, 846, 847, 851, 852, 856, 858, 859, 861, 864, 865, 866, 868, 869, 870, 871, 872, 874, 875, 877, 878, 879, 881, 882, 888, 889, 890, 892, 894, 896, 899, 903, 904, 906, 909, 913, 917, 918, 921, 925, 926, 928, 931, 932, 933, 935, 936, 937, 940, 941, 945, 948, 949, 951, 954, 956, 957, 958, 959, 960, 966, 967, 968, 969, 970, 971, 972, 975, 976, 978, 980, 982, 984, 988, 989, 992, 995, 997, 999, 1000, 1002, 1004, 1005, 1006, 1009, 1010, 1012, 1013, 1014, 1017, 1019, 1020, 1022, 1023]
+2020-01-22 16:44:42.790 DEBUG 53606 --- [ent-worker-#102] poc.ignite.service.DataRebalanceService  : r: 1, p: 1
+2020-01-22 16:44:42.790 DEBUG 53606 --- [ent-worker-#102] poc.ignite.service.DataRebalanceService  : r: 2, p: 2
+2020-01-22 16:44:42.790 DEBUG 53606 --- [ent-worker-#102] poc.ignite.service.DataRebalanceService  : r: 3, p: 3
+2020-01-22 16:44:42.790 DEBUG 53606 --- [ent-worker-#102] poc.ignite.service.DataRebalanceService  : r: 4, p: 4
+2020-01-22 16:44:42.790 DEBUG 53606 --- [ent-worker-#102] poc.ignite.service.DataRebalanceService  : r: 5, p: 5
+2020-01-22 16:44:42.790 DEBUG 53606 --- [ent-worker-#102] poc.ignite.service.DataRebalanceService  : r: 6, p: 6
+2020-01-22 16:44:42.790 DEBUG 53606 --- [ent-worker-#102] poc.ignite.service.DataRebalanceService  : r: 7, p: 7
+2020-01-22 16:44:42.790 DEBUG 53606 --- [ent-worker-#102] poc.ignite.service.DataRebalanceService  : r: 8, p: 8
+2020-01-22 16:44:42.791 DEBUG 53606 --- [ent-worker-#102] poc.ignite.service.DataRebalanceService  : r: 9, p: 9
+2020-01-22 16:44:42.791 DEBUG 53606 --- [ent-worker-#102] poc.ignite.service.DataRebalanceService  : r: 10, p: 10
+2020-01-22 16:44:42.791 DEBUG 53606 --- [ent-worker-#102] poc.ignite.service.DataRebalanceService  : r: 11, p: 11
+2020-01-22 16:44:42.791 DEBUG 53606 --- [ent-worker-#102] poc.ignite.service.DataRebalanceService  : r: 12, p: 12
+2020-01-22 16:44:42.791 DEBUG 53606 --- [ent-worker-#102] poc.ignite.service.DataRebalanceService  : r: 13, p: 13
+2020-01-22 16:44:42.791 DEBUG 53606 --- [ent-worker-#102] poc.ignite.service.DataRebalanceService  : r: 14, p: 14
+2020-01-22 16:44:42.791 DEBUG 53606 --- [ent-worker-#102] poc.ignite.service.DataRebalanceService  : r: 15, p: 15
+2020-01-22 16:44:42.791 DEBUG 53606 --- [ent-worker-#102] poc.ignite.service.DataRebalanceService  : r: 16, p: 16
+2020-01-22 16:44:42.791 DEBUG 53606 --- [ent-worker-#102] poc.ignite.service.DataRebalanceService  : r: 17, p: 17
+2020-01-22 16:44:42.791 DEBUG 53606 --- [ent-worker-#102] poc.ignite.service.DataRebalanceService  : r: 18, p: 18
+2020-01-22 16:44:42.791 DEBUG 53606 --- [ent-worker-#102] poc.ignite.service.DataRebalanceService  : r: 19, p: 19
+2020-01-22 16:44:42.791 DEBUG 53606 --- [ent-worker-#102] poc.ignite.service.DataRebalanceService  : r: 20, p: 20
+
+
+Node 2
+
+[user@host ignite-data-rebalance]$ $JAVA_HOME/bin/java -Xms1G -Xmx1G  -jar ignite-data-rebalance-0.0.1-SNAPSHOT.jar
+
+
+2020-01-22 16:30:58.726  INFO 53782 --- [           main] org.apache.ignite.internal.IgniteKernal  :
+
+>>> +----------------------------------------------------------------------+
+>>> Ignite ver. 2.7.6#20190911-sha1:21f7ca41c4348909e2fd26ccf59b5b2ce1f4474e
+>>> +----------------------------------------------------------------------+
+>>> OS name: Linux 3.10.0-957.10.1.el7.x86_64 amd64
+>>> CPU(s): 32
+>>> Heap: 1.0GB
+>>> VM name: 53782@host
+>>> Local node [ID=906A7D11-FFC2-49AB-A01F-E9BB36514F4A, order=2, clientMode=false]
+>>> Local node addresses: [host/127.0.0.1, host_oob.nseroot.com/172.17.241.80, /172.17.5.36]
+>>> Local ports: TCP:10802 TCP:11213 TCP:42101 TCP:42501
+
+[16:30:58] Topology snapshot [ver=2, locNode=906a7d11, servers=2, clients=0, state=ACTIVE, CPUs=32, offheap=1.0GB, heap=2.0GB]
+2020-01-22 16:30:58.727  INFO 53782 --- [           main] o.a.i.i.m.d.GridDiscoveryManager         : Topology snapshot [ver=2, locNode=906a7d11, servers=2, clients=0, state=ACTIVE, CPUs=32, offheap=1.0GB, heap=2.0GB]
+
+2020-01-22 16:30:58.977 DEBUG 53782 --- [           main] poc.ignite.service.DataRebalanceService  : primaryPartitions: []
+
+2020-01-22 16:31:06.864 DEBUG 53782 --- [ent-worker-#102] poc.ignite.service.DataRebalanceService  : primaryPartitions: [0, 1, 4, 5, 6, 11, 15, 16, 17, 19, 21, 24, 26, 28, 29, 30, 32, 33, 34, 38, 39, 41, 43, 44, 46, 49, 50, 51, 53, 54, 55, 59, 62, 63, 66, 72, 73, 75, 76, 78, 80, 81, 82, 83, 85, 87, 89, 90, 91, 93, 94, 95, 98, 103, 104, 105, 106, 107, 108, 109, 111, 112, 115, 116, 117, 119, 120, 121, 122, 124, 125, 126, 127, 128, 129, 131, 132, 133, 134, 136, 137, 139, 140, 142, 144, 145, 146, 147, 148, 152, 153, 154, 160, 165, 166, 168, 169, 180, 182, 187, 189, 190, 193, 198, 201, 204, 208, 210, 211, 214, 215, 216, 217, 218, 223, 228, 229, 231, 235, 238, 239, 240, 241, 242, 245, 247, 248, 252, 257, 263, 264, 265, 266, 268, 269, 270, 272, 273, 275, 277, 280, 282, 284, 285, 288, 289, 290, 292, 293, 296, 297, 299, 304, 305, 308, 309, 310, 311, 313, 314, 316, 317, 318, 320, 321, 322, 324, 325, 327, 328, 329, 330, 331, 333, 334, 341, 343, 345, 350, 351, 352, 353, 354, 355, 356, 357, 360, 361, 364, 366, 369, 373, 376, 378, 379, 380, 382, 383, 386, 390, 391, 394, 395, 401, 402, 407, 408, 411, 416, 421, 423, 425, 426, 428, 430, 431, 433, 435, 436, 438, 439, 441, 442, 443, 445, 446, 448, 449, 450, 452, 453, 454, 455, 457, 459, 460, 463, 467, 468, 470, 472, 473, 474, 475, 479, 483, 488, 492, 495, 496, 498, 499, 501, 503, 505, 507, 510, 511, 512, 513, 518, 520, 521, 522, 523, 525, 526, 527, 528, 530, 533, 534, 535, 536, 539, 540, 541, 543, 546, 547, 549, 550, 552, 553, 554, 556, 557, 558, 559, 561, 564, 565, 567, 569, 570, 571, 572, 573, 575, 578, 580, 582, 583, 586, 587, 594, 595, 599, 600, 603, 607, 609, 616, 619, 620, 622, 623, 624, 626, 627, 629, 630, 632, 634, 636, 637, 638, 639, 641, 642, 644, 645, 646, 647, 649, 652, 654, 655, 657, 662, 663, 665, 666, 667, 674, 675, 676, 679, 682, 685, 686, 687, 689, 691, 692, 696, 697, 700, 701, 703, 707, 708, 710, 715, 717, 718, 720, 722, 724, 726, 727, 728, 731, 733, 735, 737, 738, 741, 745, 746, 748, 751, 753, 755, 757, 762, 763, 764, 766, 767, 768, 769, 772, 773, 776, 777, 778, 780, 781, 782, 783, 784, 785, 789, 793, 795, 797, 798, 799, 800, 801, 802, 806, 809, 810, 811, 814, 815, 816, 817, 820, 821, 822, 824, 826, 827, 831, 833, 836, 839, 842, 843, 845, 848, 849, 850, 853, 854, 855, 857, 860, 862, 863, 867, 873, 876, 880, 883, 884, 885, 886, 887, 891, 893, 895, 897, 898, 900, 901, 902, 905, 907, 908, 910, 911, 912, 914, 915, 916, 919, 920, 922, 923, 924, 927, 929, 930, 934, 938, 939, 942, 943, 944, 946, 947, 950, 952, 953, 955, 961, 962, 963, 964, 965, 973, 974, 977, 979, 981, 983, 985, 986, 987, 990, 991, 993, 994, 996, 998, 1001, 1003, 1007, 1008, 1011, 1015, 1016, 1018, 1021]
+
+
+Client node
+
+[user@host ignite-data-rebalance-client]$ $JAVA_HOME/bin/java -Xms1G -Xmx1G  -jar ignite-data-rebalance-client-0.0.1-SNAPSHOT.jar
+
+2020-01-22 16:47:59.076  INFO 61489 --- [           main] org.apache.ignite.internal.IgniteKernal  :
+
+>>> +----------------------------------------------------------------------+
+>>> Ignite ver. 2.7.6#20190911-sha1:21f7ca41c4348909e2fd26ccf59b5b2ce1f4474e
+>>> +----------------------------------------------------------------------+
+>>> OS name: Linux 3.10.0-957.10.1.el7.x86_64 amd64
+>>> CPU(s): 32
+>>> Heap: 1.0GB
+>>> VM name: 61489@hdpdev6
+>>> Local node [ID=403B8FD4-0222-4468-BDC5-869D2EB36BC6, order=22, clientMode=true]
+>>> Local node addresses: [hdpdev6_oob.nseroot.com/127.0.0.1, hdpdev6/172.17.241.80, /172.17.5.36]
+>>> Local ports: TCP:10803 TCP:42102
+
+[16:47:59] Topology snapshot [ver=22, locNode=403b8fd4, servers=2, clients=1, state=ACTIVE, CPUs=32, offheap=1.3GB, heap=3.0GB]
+
+
+0: jdbc:ignite:thin://host:10801> select count(*) from "STS".PERSON;
++--------------------------------+
+|            COUNT(*)            |
++--------------------------------+
+| 2160000                        |
++--------------------------------+
+1 row selected (0.01 seconds)
+
+
+
+offset: 2160000
+limit: 500000
+cityIds: '2, 3, 7, 8, 9, 10, 12, 13, 14, 18, 20'
+
+visor> cache -a
+Nodes for: person-cache1(@c0)
++====================================================================================================================+
+|       Node ID8(@), IP        | CPUs | Heap Used | CPU Load |   Up Time    | Size (Primary / Backup)  | Hi/Mi/Rd/Wr |
++====================================================================================================================+
+| B9B79B3F(@n0), 172.17.241.80 | 32   | 26.59 %   | 0.03 %   | 00:03:09.642 | Total: 25 (25 / 0)       | Hi: 0       |
+|                              |      |           |          |              |   Heap: 0 (0 / <n/a>)    | Mi: 0       |
+|                              |      |           |          |              |   Off-Heap: 25 (25 / 0)  | Rd: 0       |
+|                              |      |           |          |              |   Off-Heap Memory: <n/a> | Wr: 0       |
++------------------------------+------+-----------+----------+--------------+--------------------------+-------------+
+| 906A7D11(@n1), 172.17.241.80 | 32   | 23.58 %   | 0.03 %   | 00:03:04.108 | Total: 25 (25 / 0)       | Hi: 0       |
+|                              |      |           |          |              |   Heap: 0 (0 / <n/a>)    | Mi: 0       |
+|                              |      |           |          |              |   Off-Heap: 25 (25 / 0)  | Rd: 0       |
+|                              |      |           |          |              |   Off-Heap Memory: <n/a> | Wr: 0       |
++--------------------------------------------------------------------------------------------------------------------+
+
+visor> cache -a
+Nodes for: person-cache1(@c0)
++=============================================================================================================================+
+|       Node ID8(@), IP        | CPUs | Heap Used | CPU Load |   Up Time    |      Size (Primary / Backup)      | Hi/Mi/Rd/Wr |
++=============================================================================================================================+
+| B9B79B3F(@n0), 172.17.241.80 | 32   | 58.73 %   | 0.00 %   | 00:08:08.201 | Total: 1999975 (1999975 / 0)      | Hi: 0       |
+|                              |      |           |          |              |   Heap: 0 (0 / <n/a>)             | Mi: 0       |
+|                              |      |           |          |              |   Off-Heap: 1999975 (1999975 / 0) | Rd: 0       |
+|                              |      |           |          |              |   Off-Heap Memory: <n/a>          | Wr: 0       |
++------------------------------+------+-----------+----------+--------------+-----------------------------------+-------------+
+| 906A7D11(@n1), 172.17.241.80 | 32   | 6.16 %    | 0.03 %   | 00:08:02.667 | Total: 25 (25 / 0)                | Hi: 0       |
+|                              |      |           |          |              |   Heap: 0 (0 / <n/a>)             | Mi: 0       |
+|                              |      |           |          |              |   Off-Heap: 25 (25 / 0)           | Rd: 0       |
+|                              |      |           |          |              |   Off-Heap Memory: <n/a>          | Wr: 0       |
++-----------------------------------------------------------------------------------------------------------------------------+
+
+
+----------
+
+After OOM
+
+Node 1 crashed
+
+2020-01-22 16:48:01.544 ERROR 53606 --- [r-stripe-26-#59] ROOT                                     : Critical system error detected. Will be handled accordingly to configured handler [hnd=StopNodeOrHaltFailureHandler [tryStop=false, timeout=0, super=AbstractFailureHandler [ignoredFailureTypes=[SYSTEM_WORKER_BLOCKED, SYSTEM_CRITICAL_OPERATION_TIMEOUT]]], failureCtx=FailureContext [type=CRITICAL_ERROR, err=class o.a.i.i.mem.IgniteOutOfMemoryException: Out of memory in data region [name=default, initSize=512.0 MiB, maxSize=512.0 MiB, persistenceEnabled=false] Try the following:
+  ^-- Increase maximum off-heap memory size (DataRegionConfiguration.maxSize)
+  ^-- Enable Ignite persistence (DataRegionConfiguration.persistenceEnabled)
+  ^-- Enable eviction or expiration policies]]
+
+org.apache.ignite.internal.mem.IgniteOutOfMemoryException: Out of memory in data region [name=default, initSize=512.0 MiB, maxSize=512.0 MiB, persistenceEnabled=false] Try the following:
+  ^-- Increase maximum off-heap memory size (DataRegionConfiguration.maxSize)
+  ^-- Enable Ignite persistence (DataRegionConfiguration.persistenceEnabled)
+  ^-- Enable eviction or expiration policies
+
+visor> cache -a
+Time of the snapshot: 2020-01-22 16:50:17
+Nodes for: person-cache1(@c0)
++===========================================================================================================================+
+|       Node ID8(@), IP        | CPUs | Heap Used | CPU Load |   Up Time    |     Size (Primary / Backup)     | Hi/Mi/Rd/Wr |
++===========================================================================================================================+
+| 906A7D11(@n1), 172.17.241.80 | 32   | 12.25 %   | 0.23 %   | 00:19:21.735 | Total: 249881 (249881 / 0)      | Hi: 0       |
+|                              |      |           |          |              |   Heap: 0 (0 / <n/a>)           | Mi: 0       |
+|                              |      |           |          |              |   Off-Heap: 249881 (249881 / 0) | Rd: 0       |
+|                              |      |           |          |              |   Off-Heap Memory: <n/a>        | Wr: 0       |
++---------------------------------------------------------------------------------------------------------------------------+
+
+----------==----------

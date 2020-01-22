@@ -30,9 +30,9 @@ public class DataRebalanceService {
 
 		String cacheName = "person-cache1";
 		IgniteCache<PersonKey, Person> personCache1 = ignite.getOrCreateCache(cacheName);
-		int records = Integer.valueOf(ip.getOther().get("records"));
+		int offset = Integer.valueOf(ip.getOther().get("offset"));
+		int limit = Integer.valueOf(ip.getOther().get("limit"));
 		List<Integer> cityIds;
-
 		String cityIdsString = ip.getOther().get("cityIds");
 
 		if (cityIdsString == null || cityIdsString.isEmpty())
@@ -42,9 +42,14 @@ public class DataRebalanceService {
 					.collect(Collectors.toList());
 
 		log.debug("cityIds: " + cityIds);
+		log.debug("offset: " + offset);
+		log.debug("limit: " + limit);
 
 		try (IgniteDataStreamer<PersonKey, Person> streamer = ignite.dataStreamer(personCache1.getName())) {
-			for (int i = 0; i < records; i++) {
+
+			limit += offset;
+
+			for (int i = offset; i < limit; i++) {
 				Collections.shuffle(cityIds);
 				streamer.addData(new PersonKey(i, cityIds.get(0)), new Person(i, cityIds.get(0), "p" + i));
 			}

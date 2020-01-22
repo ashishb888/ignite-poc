@@ -28,6 +28,7 @@ ignite:
     backups: 1
           
   other:
-    records: 500
+    offset: 0
+    limit: 500
     cityIds: '2, 3, 7, 8, 9, 10, 12, 13, 14, 18, 20'
     
