@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: ignite-data-rebalance
+
+logging:
+  file: /var/tmp/logs/ignite-data-rebalance/ignite-data-rebalance
+  level:
+    root: INFO
+    poc.ignite: debug
+
+ignite:
+  ips:
+    - 172.17.5.36:42500..42700
+    #- 172.17.5.31:42500..42700
+  
+  tcpDiscoverySpi:
+    localPort: 42500
+  
+  tcpCommunicationSpi:
+    localPort: 42100  
+  
+  defaultRegion:
+    initial: 10435456 
+    max: 10435456 
+    name: Default_Region
+    
+  caches:
+    backups: 1
+          
