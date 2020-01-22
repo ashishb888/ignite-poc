@@ -67,9 +67,7 @@ public class BeansConfig {
 			igniteConfiguration.setPeerClassLoadingEnabled(true);
 			igniteConfiguration.setClientMode(true);
 			// igniteConfiguration.setIgniteInstanceName("test";)
-
 			igniteConfiguration.setGridLogger(new Slf4jLogger());
-			igniteConfiguration.setClientMode(Boolean.valueOf(ip.getOther().get("clientMode")));
 
 			ignite = Ignition.getOrStart(igniteConfiguration);
 		} catch (IgniteException e) {
