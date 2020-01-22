@@ -1,7 +1,10 @@
 spring:
   application:
     name: ignite-data-rebalance
-
+  
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration, org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
+  
 logging:
   file: /var/tmp/logs/ignite-data-rebalance/ignite-data-rebalance
   level:
