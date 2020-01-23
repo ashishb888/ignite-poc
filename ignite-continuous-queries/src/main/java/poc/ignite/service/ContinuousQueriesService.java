@@ -1,8 +1,5 @@
 package poc.ignite.service;
 
-import javax.cache.configuration.Factory;
-import javax.cache.event.CacheEntryEventFilter;
-
 import org.apache.ignite.Ignite;
 import org.apache.ignite.IgniteCache;
 import org.apache.ignite.cache.CacheMode;
@@ -12,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
-import poc.ignite.domain.CacheEntryEventFilterImpl;
 import poc.ignite.domain.CacheEntryUpdatedListenerImpl;
+import poc.ignite.domain.FactoryImpl;
 import poc.ignite.domain.Person;
 
 @Service
@@ -40,14 +37,7 @@ public class ContinuousQueriesService {
 		ContinuousQuery<Integer, Person> cQuery = new ContinuousQuery<>();
 
 		cQuery.setLocalListener(new CacheEntryUpdatedListenerImpl());
-		cQuery.setRemoteFilterFactory(new Factory<CacheEntryEventFilter<Integer, Person>>() {
-			private static final long serialVersionUID = -6099036108764847103L;
-
-			@Override
-			public CacheEntryEventFilter<Integer, Person> create() {
-				return new CacheEntryEventFilterImpl();
-			}
-		});
+		cQuery.setRemoteFilterFactory(new FactoryImpl());
 
 		personCache2.query(cQuery);
 	}
