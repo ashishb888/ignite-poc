@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: ignite-atomic-types-client
+  
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration, org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration, org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
+  
+logging:
+  file: /var/tmp/logs/ignite-atomic-types-client/ignite-atomic-types-client
+  level:
+    root: INFO
+    poc.ignite: debug
+
+ignite:
+  ips:
+    - 172.17.5.36:42500..42700
+    #- 172.17.5.31:42500..42700
+  
+  tcpDiscoverySpi:
+    localPort: 42500
+  
+  tcpCommunicationSpi:
+    localPort: 42100  
+  
+  defaultRegion:
+    initial: 10435456 
+    max: 10435456 
+    name: Default_Region
+  
+  transactions: # In seconds
+    defaultTxTimeout: 6000
+    txTimeoutOnPME: 6000
+    
+  caches:
+    backups: 1
+          
