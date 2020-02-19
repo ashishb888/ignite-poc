@@ -2,6 +2,7 @@ package poc.ignite.repos;
 
 import org.apache.ignite.Ignite;
 import org.apache.ignite.IgniteCache;
+import org.apache.ignite.cache.CacheAtomicityMode;
 import org.apache.ignite.cache.CacheMode;
 import org.apache.ignite.configuration.CacheConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ public class CacheRepository {
 		personCacheConfig.setCacheMode(CacheMode.PARTITIONED);
 		personCacheConfig.setSqlSchema(schema);
 		personCacheConfig.setBackups(Integer.valueOf(ip.getCaches().get("backups")));
+		personCacheConfig.setAtomicityMode(CacheAtomicityMode.TRANSACTIONAL);
 
 		ignite.addCacheConfiguration(personCacheConfig);
 		return ignite.getOrCreateCache(cacheName);

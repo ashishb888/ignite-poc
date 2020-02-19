@@ -1,8 +1,5 @@
 package poc.ignite.service;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -11,11 +8,8 @@ import java.util.stream.IntStream;
 
 import org.apache.ignite.Ignite;
 import org.apache.ignite.IgniteCache;
-import org.apache.ignite.IgniteDataStreamer;
-import org.apache.ignite.cluster.ClusterNode;
-import org.apache.ignite.events.Event;
-import org.apache.ignite.events.EventType;
-import org.apache.ignite.lang.IgnitePredicate;
+import org.apache.ignite.IgniteTransactions;
+import org.apache.ignite.transactions.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,12 +30,13 @@ public class TransactionService {
 	@Autowired
 	private IgniteProperties ip;
 	private AtomicBoolean baseTopology = new AtomicBoolean(false);
+	private String schema = "sts2";
 
 	private void start() {
 		log.debug("start service");
 
 		int records = Integer.valueOf(ip.getOther().get("records"));
-		IgniteCache<Integer, Person> personCache = cr.personCache("person-cache2", "sts2", "Default_Region");
+		IgniteCache<Integer, Person> personCache = cr.personCache("person-cache2", schema, "Default_Region");
 
 		IntStream.iterate(0, i -> i + 1).limit(records).forEach(i -> {
 			personCache.put(i, new Person(i, "s1" + i, "s2" + i));
@@ -71,7 +66,6 @@ public class TransactionService {
 				personCache.put(k, v);
 			});
 
-			personCache.putAll(personMp);
 		}, "t1");
 
 		Thread t2 = new Thread(() -> {
@@ -116,9 +110,70 @@ public class TransactionService {
 		t3.start();
 	}
 
+	private void getAndPut() {
+		log.debug("getAndPut service");
+
+		int records = Integer.valueOf(ip.getOther().get("records"));
+		IgniteCache<Integer, Person> personCache = cr.personCache("person-cache2", schema, "Default_Region");
+
+		IntStream.iterate(0, i -> i + 1).limit(records).forEach(i -> {
+			personCache.put(i, new Person(i, "s1" + i, "s2" + i));
+		});
+
+		int key = 0;
+
+		Thread t1 = new Thread(() -> {
+			log.debug("t1 starts");
+
+			Person val = personCache.get(key);
+
+			try {
+				Thread.sleep(5000);
+			} catch (InterruptedException e) {
+				log.error(e.getMessage(), e);
+			}
+
+			log.debug("val: " + val);
+
+			val.setT2("t1");
+			personCache.put(key, val);
+
+		}, "t1");
+
+		Thread t2 = new Thread(() -> {
+			log.debug("t2 starts");
+
+			Person val = personCache.get(key);
+
+			log.debug("val: " + val);
+
+			val.setT1("t2");
+			personCache.put(key, val);
+		}, "t2");
+
+		Thread t3 = new Thread(() -> {
+			log.debug("t3 starts");
+
+			while (true) {
+				log.debug("val: " + personCache.get(key));
+
+				try {
+					Thread.sleep(4000);
+				} catch (InterruptedException e) {
+					log.error(e.getMessage(), e);
+				}
+			}
+		}, "t3");
+
+		t1.start();
+		t2.start();
+		t3.start();
+	}
+
 	public void main() {
 		log.debug("main service");
 
-		start();
+		// start();
+		getAndPut();
 	}
 }

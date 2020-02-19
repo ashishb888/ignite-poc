@@ -58,3 +58,16 @@ RUN 1: Threads over-writes values of each other
 2020-02-19 13:37:45.743  INFO 122109 --- [             t3] poc.ignite.service.TransactionService    : v: Person(id=7, t1=s17, t2=t1)
 2020-02-19 13:37:45.743  INFO 122109 --- [             t3] poc.ignite.service.TransactionService    : v: Person(id=8, t1=s18, t2=t1)
 2020-02-19 13:37:45.743  INFO 122109 --- [             t3] poc.ignite.service.TransactionService    : v: Person(id=9, t1=s19, t2=t1)
+
+----------==----------
+Run 2: getAndPut
+
+2020-02-19 15:03:26.049 DEBUG 144194 --- [             t1] poc.ignite.service.TransactionService    : t1 starts
+2020-02-19 15:03:26.049 DEBUG 144194 --- [             t3] poc.ignite.service.TransactionService    : t3 starts
+2020-02-19 15:03:26.049 DEBUG 144194 --- [             t2] poc.ignite.service.TransactionService    : t2 starts
+2020-02-19 15:03:26.060 DEBUG 144194 --- [             t2] poc.ignite.service.TransactionService    : val: Person(id=0, t1=s10, t2=s20)
+2020-02-19 15:03:26.060 DEBUG 144194 --- [             t3] poc.ignite.service.TransactionService    : val: Person(id=0, t1=s10, t2=s20)
+2020-02-19 15:03:30.061 DEBUG 144194 --- [             t3] poc.ignite.service.TransactionService    : val: Person(id=0, t1=t2, t2=s20)
+2020-02-19 15:03:31.060 DEBUG 144194 --- [             t1] poc.ignite.service.TransactionService    : val: Person(id=0, t1=s10, t2=s20)
+2020-02-19 15:03:34.062 DEBUG 144194 --- [             t3] poc.ignite.service.TransactionService    : val: Person(id=0, t1=s10, t2=t1)
+2020-02-19 15:03:38.063 DEBUG 144194 --- [             t3] poc.ignite.service.TransactionService    : val: Person(id=0, t1=s10, t2=t1)
