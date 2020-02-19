@@ -63,12 +63,16 @@ public class TransactionService {
 			}
 
 			personMp.forEach((k, v) -> {
-				log.info("v: " + v);
+				log.debug("v: " + v);
 
 				// v.setT1("t1");
 				v.setT2("t1");
+
+				personCache.put(k, v);
 			});
-		});
+
+			personCache.putAll(personMp);
+		}, "t1");
 
 		Thread t2 = new Thread(() -> {
 			log.debug("t2 starts");
@@ -82,15 +86,34 @@ public class TransactionService {
 //			}
 
 			personMp.forEach((k, v) -> {
-				log.info("v: " + v);
+				log.debug("v: " + v);
 
 				v.setT1("t2");
 				// v.setT2("t2");
+
+				personCache.put(k, v);
 			});
-		});
+		}, "t2");
+
+		Thread t3 = new Thread(() -> {
+			log.debug("t3 starts");
+
+			while (true) {
+				personCache.getAll(keys).forEach((k, v) -> {
+					log.debug("v: " + v);
+				});
+
+				try {
+					Thread.sleep(4000);
+				} catch (InterruptedException e) {
+					log.error(e.getMessage(), e);
+				}
+			}
+		}, "t3");
 
 		t1.start();
 		t2.start();
+		t3.start();
 	}
 
 	public void main() {
