@@ -170,10 +170,80 @@ public class TransactionService {
 		t3.start();
 	}
 
+	private void getAndPutWithTransaction() {
+		log.debug("getAndPutWithTransaction service");
+
+		int records = Integer.valueOf(ip.getOther().get("records"));
+		IgniteCache<Integer, Person> personCache = cr.personCache("person-cache2", schema, "Default_Region");
+
+		IntStream.iterate(0, i -> i + 1).limit(records).forEach(i -> {
+			personCache.put(i, new Person(i, "s1" + i, "s2" + i));
+		});
+
+		int key = 0;
+
+		Thread t1 = new Thread(() -> {
+			log.debug("t1 starts");
+			IgniteTransactions transactions = ignite.transactions();
+
+			try (Transaction tx = transactions.txStart()) {
+				Person val = personCache.get(key);
+
+				try {
+					Thread.sleep(5000);
+				} catch (InterruptedException e) {
+					log.error(e.getMessage(), e);
+				}
+
+				log.debug("val: " + val);
+
+				val.setT2("t1");
+				personCache.put(key, val);
+
+				tx.commit();
+			}
+		}, "t1");
+
+		Thread t2 = new Thread(() -> {
+			log.debug("t2 starts");
+
+			IgniteTransactions transactions = ignite.transactions();
+
+			try (Transaction tx = transactions.txStart()) {
+				Person val = personCache.get(key);
+
+				log.debug("val: " + val);
+
+				val.setT1("t2");
+				personCache.put(key, val);
+				tx.commit();
+			}
+		}, "t2");
+
+		Thread t3 = new Thread(() -> {
+			log.debug("t3 starts");
+
+			while (true) {
+				log.debug("val: " + personCache.get(key));
+
+				try {
+					Thread.sleep(4000);
+				} catch (InterruptedException e) {
+					log.error(e.getMessage(), e);
+				}
+			}
+		}, "t3");
+
+		t1.start();
+		t2.start();
+		t3.start();
+	}
+
 	public void main() {
 		log.debug("main service");
 
 		// start();
-		getAndPut();
+		// getAndPut();
+		getAndPutWithTransaction();
 	}
 }
