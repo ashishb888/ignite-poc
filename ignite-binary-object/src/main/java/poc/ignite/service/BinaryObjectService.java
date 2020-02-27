@@ -1,38 +1,50 @@
 package poc.ignite.service;
 
+import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.apache.ignite.IgniteCache;
 import org.apache.ignite.binary.BinaryObject;
 import org.apache.ignite.binary.BinaryObjectBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.openjdk.jmh.annotations.BenchmarkMode;
+import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.OutputTimeUnit;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.State;
 
-import lombok.extern.slf4j.Slf4j;
 import poc.ignite.domain.Person;
-import poc.ignite.properties.IgniteProperties;
 import poc.ignite.repos.CacheRepository;
 
-@Service
-@Slf4j
 public class BinaryObjectService {
 
-	@Autowired
-	private CacheRepository cr;
-	@Autowired
-	private IgniteProperties ip;
-	private String schema = "sts2";
-	IgniteCache<Integer, Person> personCache;
-	private int records;
+	@State(Scope.Benchmark)
+	public static class BenchmarkState {
+		int records;
+		IgniteCache<Integer, Person> personCache;
 
-	private void bo() {
-		log.debug("bo service");
+		@Setup
+		public void setup() {
+			records = Integer.valueOf(System.getProperty("records"));
+			personCache = CacheRepository.personCache("person-cache2", "sts1", "Default_Region");
 
-		IgniteCache<Integer, BinaryObject> personCacheBinary = personCache.withKeepBinary();
+			IntStream.iterate(0, i -> i + 1).limit(records).forEach(i -> {
+				personCache.put(i, new Person(i, "s1" + i, "s2" + i));
+			});
+		}
+	}
 
-		Set<Integer> keys = IntStream.iterate(0, i -> i + 1).limit(records).boxed().collect(Collectors.toSet());
+	@BenchmarkMode(Mode.All)
+	@OutputTimeUnit(TimeUnit.MICROSECONDS)
+	public void bo(BenchmarkState state) {
+		System.out.println("bo service");
+
+		IgniteCache<Integer, BinaryObject> personCacheBinary = state.personCache.withKeepBinary();
+
+		Set<Integer> keys = IntStream.iterate(0, i -> i + 1).limit(state.records).boxed().collect(Collectors.toSet());
 
 		personCacheBinary.getAll(keys).forEach((k, v) -> {
 			BinaryObjectBuilder bob = v.toBuilder();
@@ -42,43 +54,35 @@ public class BinaryObjectService {
 		});
 	}
 
-	private void so() {
-		log.debug("so service");
+	@BenchmarkMode(Mode.All)
+	@OutputTimeUnit(TimeUnit.MICROSECONDS)
+	public void so(BenchmarkState state) {
+		System.out.println("so service");
 
-		Set<Integer> keys = IntStream.iterate(0, i -> i + 1).limit(records).boxed().collect(Collectors.toSet());
+		Set<Integer> keys = IntStream.iterate(0, i -> i + 1).limit(state.records).boxed().collect(Collectors.toSet());
 
-		personCache.getAll(keys).forEach((k, v) -> {
+		state.personCache.getAll(keys).forEach((k, v) -> {
 			v.setT1("so1" + k);
 			v.setT2("so2" + k);
 
-			personCache.put(k, v);
+			state.personCache.put(k, v);
 		});
 	}
 
-	private void printAll() {
-		personCache.forEach(r -> {
-			log.debug("r: " + r.getValue());
+	private void printAll(BenchmarkState state) {
+		state.personCache.forEach(r -> {
+			System.out.println("r: " + r.getValue());
 		});
 	}
 
 	private void init() {
-		log.debug("init service");
+		System.out.println("init service");
 
-		records = Integer.valueOf(ip.getOther().get("records"));
-		personCache = cr.personCache("person-cache2", schema, "Default_Region");
-
-		IntStream.iterate(0, i -> i + 1).limit(records).forEach(i -> {
-			personCache.put(i, new Person(i, "s1" + i, "s2" + i));
-		});
 	}
 
 	public void main() {
-		log.debug("main service");
+		System.out.println("main service");
 
 		init();
-		bo();
-		printAll();
-		so();
-		printAll();
 	}
 }

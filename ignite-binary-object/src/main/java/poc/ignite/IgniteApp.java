@@ -1,28 +1,17 @@
 package poc.ignite;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.openjdk.jmh.runner.Runner;
+import org.openjdk.jmh.runner.RunnerException;
+import org.openjdk.jmh.runner.options.Options;
+import org.openjdk.jmh.runner.options.OptionsBuilder;
 
-import lombok.extern.slf4j.Slf4j;
-import poc.ignite.service.IgniteService;
+import poc.ignite.service.BinaryObjectService1;
 
-@SpringBootApplication
-@Slf4j
-public class IgniteApp implements CommandLineRunner {
+public class IgniteApp {
 
-	@Autowired
-	private IgniteService is;
+	public static void main(String[] args) throws RunnerException {
+		Options opt = new OptionsBuilder().include(BinaryObjectService1.class.getSimpleName()).forks(1).build();
 
-	public static void main(String[] args) {
-		SpringApplication.run(IgniteApp.class, args);
-	}
-
-	@Override
-	public void run(String... args) throws Exception {
-		log.info("run service");
-
-		is.main();
+		new Runner(opt).run();
 	}
 }

@@ -1,5 +1,7 @@
 package poc.ignite.config;
 
+import java.util.Arrays;
+
 import org.apache.ignite.Ignite;
 import org.apache.ignite.IgniteException;
 import org.apache.ignite.Ignition;
@@ -10,23 +12,11 @@ import org.apache.ignite.logger.slf4j.Slf4jLogger;
 import org.apache.ignite.spi.communication.tcp.TcpCommunicationSpi;
 import org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi;
 import org.apache.ignite.spi.discovery.tcp.ipfinder.vm.TcpDiscoveryVmIpFinder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
-import lombok.extern.slf4j.Slf4j;
-import poc.ignite.properties.IgniteProperties;
-
-@Configuration
-@Slf4j
 public class BeansConfig {
 
-	@Autowired
-	private IgniteProperties ip;
-
-	@Bean
-	public Ignite ignite() {
-		log.info("ignite bean service");
+	public static Ignite ignite() {
+		System.out.println("ignite bean service");
 
 		Ignite ignite = null;
 
@@ -34,24 +24,24 @@ public class BeansConfig {
 
 			TcpDiscoverySpi spi = new TcpDiscoverySpi();
 
-			spi.setLocalPort(ip.getTcpDiscoverySpi().get("localPort"));
+			spi.setLocalPort(42500);
 			spi.setLocalPortRange(100);
 
 			TcpDiscoveryVmIpFinder ipFinder = new TcpDiscoveryVmIpFinder();
-			ipFinder.setAddresses(ip.getIps());
+			ipFinder.setAddresses(Arrays.asList("172.17.5.36:42500..42700"));
 			spi.setIpFinder(ipFinder);
 			IgniteConfiguration igniteConfiguration = new IgniteConfiguration();
 
 			// Changing total RAM size to be used by Ignite Node.
 			DataStorageConfiguration storageCfg = new DataStorageConfiguration();
 			DataRegionConfiguration defaultRegion = new DataRegionConfiguration();
-			defaultRegion.setName(ip.getDefaultRegion().get("name"));
-			defaultRegion.setInitialSize(Long.valueOf(ip.getDefaultRegion().get("initial")));
-			defaultRegion.setMaxSize(Long.valueOf(ip.getDefaultRegion().get("max")));
+			defaultRegion.setName("Default_Region");
+			defaultRegion.setInitialSize(10435456);
+			defaultRegion.setMaxSize(10435456);
 			storageCfg.setDefaultDataRegionConfiguration(defaultRegion);
 
 			TcpCommunicationSpi commSpi = new TcpCommunicationSpi();
-			commSpi.setLocalPort(ip.getTcpCommunicationSpi().get("localPort"));
+			commSpi.setLocalPort(42100);
 			commSpi.setMessageQueueLimit(1024);
 			commSpi.setSocketWriteTimeout(10000L);
 
@@ -71,7 +61,7 @@ public class BeansConfig {
 
 			ignite = Ignition.getOrStart(igniteConfiguration);
 		} catch (IgniteException e) {
-			log.error("Exception", e);
+			e.printStackTrace();
 		}
 
 		return ignite;
