@@ -12,7 +12,7 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<ignite.version>2.7.6</ignite.version>
-		<h2.version>1.4.197</h2.version>
+		<h2.version>2.0.206</h2.version>
 		<gridgain.version>8.7.7</gridgain.version>
 	</properties>
 
